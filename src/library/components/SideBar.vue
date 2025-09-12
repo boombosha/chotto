@@ -322,26 +322,26 @@ watch(() => items.value.map(i => i.selected), () => nextTick(syncBarWithSelected
     &::before {
       content: '';
       position: absolute;
-      width: calc(var(--chotto-avatar-small) + 15px);
-      height: var(--chotto-avatar-small);
-      border-radius: var(--chotto-sidebar-hover-radius, 10px);
+      width: var(--chotto-sidebar-item-hover-width, 64px);
+      height: var(--chotto-sidebar-item-hover-height, 50px);
+      border-radius: var(--chotto-sidebar-item-hover-radius, 2px);
       background-color: transparent;
-      top: 0;
+      top: calc((var(--chotto-avatar-small) - 50px) / 2);
       left: 50%;
       transform: translateX(-50%);
-      z-index: 0;
+      z-index: 1;
       transition: background-color 0.2s ease;
       pointer-events: none;
     }
 
     &:hover::before {
-      background-color: var(--neutral-125);
+      background-color: var(--chotto-sidebar-item-hover-background-color, #FFFFFF);
     }
 
     span {
       position: absolute;
       top: 2px;
-      right: 0;
+      right: 7px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -364,6 +364,10 @@ watch(() => items.value.map(i => i.selected), () => nextTick(syncBarWithSelected
       line-height: 1;
       color: var(--chotto-header-font-color, #5F5F5F);
     }
+  }
+
+  &__item-fixed span {
+    right: -8px;
   }
 
   &__image {
