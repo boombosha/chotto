@@ -40,6 +40,7 @@
           :key="chat.chatId"
           class="chat-list__item"
           :chat="chat"
+          :show-dialogs="props.showDialogs"
           @select="selectChat"
           @expand="expandChat"
           @action="action"
@@ -52,6 +53,7 @@
           :key="chat.chatId"
           class="chat-list__item"
           :chat="chat"
+          :show-dialogs="props.showDialogs"
           @select="selectChat"
           @expand="expandChat"
           @action="action"
@@ -64,6 +66,7 @@
           :key="chat.chatId"
           class="chat-list__item"
           :chat="chat"
+          :show-dialogs="props.showDialogs"
           @select="selectChat"
           @expand="expandChat"
           @action="action"
@@ -110,6 +113,10 @@ const props = defineProps({
   dialogTabs: {
     type: Array,
     default: () => [],
+  },
+  showDialogs: {
+    type: Boolean,
+    default: true,
   },
 });
 
