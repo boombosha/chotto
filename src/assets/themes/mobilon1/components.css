@@ -3,7 +3,7 @@
   --chotto-chat-panel-border-radius: 0px;
 
   /* Side Bar */
-  --chotto-sidebar-padding-container: 0 8px 7px 8px;
+  --chotto-sidebar-padding-container: 0 0 7px 0;
   --chotto-sidebar-row-gap-list: 15px;
   --chotto-sidebar-image-active-border: 3px solid var(--neutral-125);
   /* --chotto-sidebar-list-fixed-border-top: 1px solid var(--neutral-300); */
@@ -11,7 +11,11 @@
   --chotto-sidebar-notification-count-height: 18px;
   --chotto-sidebar-list-fixed-padding: 12px 10px 22px;
   --chotto-sidebar-hover-radius: 10px;
-
+  --chotto-sidebar-item-hover-width: 64px;
+  --chotto-sidebar-item-hover-height: 50px;
+  --chotto-sidebar-item-hover-radius: 2px;
+  --chotto-sidebar-item-hover-background-color: var(--default-white);
+  
   /* Context Menu */
   --chotto-context-menu-border-radius: 4px;
   --chotto-context-menu-items-row-gap: 0;
