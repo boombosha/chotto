@@ -508,7 +508,7 @@ const closeModal = () => isOpenModal.value = false
     }
 
     .video-message__content.with-avatar-indent {
-      margin-left: calc(var(--chotto-avatar-small) + 12px);
+      margin-right: calc(var(--chotto-avatar-small) + 12px);
     }
 
     .video-message__text-container {
