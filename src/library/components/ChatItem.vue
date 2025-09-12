@@ -99,12 +99,12 @@
       </div>
 
       <div
-        v-if="chat.dialogs" 
+        v-if="props.showDialogs && chat.dialogs" 
         class="chat-item__dialog-buttons"
         @click="emit('expand', props.chat)"
       >
         <button
-          v-if="!chat.dialogsExpanded"
+          v-if="props.showDialogs && !chat.dialogsExpanded"
           id="noSelectButton"
           class="chat-item__menu-button"
         >
@@ -114,7 +114,7 @@
           />
         </button>
         <button
-          v-if="chat.dialogsExpanded"
+          v-if="props.showDialogs && chat.dialogsExpanded"
           id="noSelectButton"
           class="chat-item__menu-button"
         >
@@ -127,7 +127,7 @@
     </div>
 
     <div 
-      v-if="chat.dialogsExpanded"
+      v-if="props.showDialogs && chat.dialogsExpanded"
       class="dialog__container"
     >
       <div
@@ -181,6 +181,10 @@ const props = defineProps({
   chat: {
     type: Object,
     required: true,
+  },
+  showDialogs: {
+    type: Boolean,
+    default: true,
   },
 });
 
