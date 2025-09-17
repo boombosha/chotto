@@ -111,6 +111,7 @@ import {
   SystemMessage,
   TypingMessage,
   BaseReplyMessage,
+  DelimiterMessage,
 } from "../messages";
 
 import { IFeedObject, IFeedTyping, IFeedUnreadButton } from '../../types';
@@ -284,6 +285,7 @@ const componentsMap = (type) => {
     'message.video': VideoMessage,
     'message.call': CallMessage,
     'message.system': SystemMessage,
+    'message.delimiter': DelimiterMessage,
     'system.date': DateMessage,
     'message.typing': TypingMessage
   };

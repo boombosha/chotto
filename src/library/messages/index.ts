@@ -15,6 +15,7 @@ import ReplyFileMessage from './ReplyFileMessage.vue'
 import BaseReplyMessage from './BaseReplyMessage.vue'
 import LinkPreview from './LinkPreview.vue'
 import DateMessageSticky from './DateMessageSticky.vue'
+import DelimiterMessage from './DelimiterMessage.vue'
 
 export {
   AudioMessage,
@@ -33,5 +34,6 @@ export {
   ReplyFileMessage,
   BaseReplyMessage,
   LinkPreview,
-  DateMessageSticky
+  DateMessageSticky,
+  DelimiterMessage,
 }

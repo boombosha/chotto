@@ -410,6 +410,14 @@ export const messages = [
     ]
   },
   {
+    chatId: 6, 
+    dialogId: 'dlg_43543555', 
+    messageId: 1,
+    timestamp: 1756979101,
+    type: "message.delimiter", 
+    text: 'диалог Telegram',
+  },
+  {
     chatId: 6,
     dialogId: 'dlg_6_new',
     messageId: '602',
