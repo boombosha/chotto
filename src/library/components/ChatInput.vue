@@ -36,7 +36,10 @@
       @click="sendMessage"
     >
       <span class="">
-        <component :is="sendIcon" />
+        <component 
+          :is="sendIcon" 
+          :color="sendIconColor"
+        />
       </span>
     </button>
 
@@ -52,7 +55,7 @@ import { useMessage } from '../../helpers/useMessage';
 import { t } from '../../locale/useLocale';
 import { IFilePreview, IInputMessage } from '../../types';
 import useImmediateDebouncedRef from '../../helpers/useImmediateDebouncedRef';
-import { WhatsAppSendIcon, SMSSendIcon, MaxSendIcon, TelegramSendIcon } from '../icons';
+import { SendIcon } from '../icons';
 
 
 const emit = defineEmits(['send','typing']);
@@ -83,6 +86,11 @@ const props = defineProps({
     type: Object,
     required: false,
     default: null,
+  },
+  inputButtonColor: {
+    type: String,
+    required: false,
+    default: null,
   }
 })
 
@@ -94,23 +102,32 @@ const disabledSendButton = computed(() => {
 })
 
 const sendIcon = computed(() => {
+  return SendIcon;
+})
+
+const sendIconColor = computed(() => {
+
+  if (props.inputButtonColor) {
+    return props.inputButtonColor;
+  }
+  
   if (!props.selectedChannel?.channelId) {
-    return WhatsAppSendIcon;
+    return '#25D366';
   }
   
   const channelId = props.selectedChannel.channelId.toLowerCase();
   
   if (channelId.includes('whatsapp') || channelId.includes('waba')) {
-    return WhatsAppSendIcon;
+    return '#25D366'; 
   } else if (channelId.includes('telegram')) {
-    return TelegramSendIcon;
+    return '#37AFE2'; 
   } else if (channelId.includes('sms')) {
-    return SMSSendIcon;
+    return '#6C757D'; 
   } else if (channelId.includes('max')) {
-    return MaxSendIcon;
+    return '#4B0082';
   }
   
-  return WhatsAppSendIcon;
+  return '#25D366';
 })
 
 watch(

@@ -16,6 +16,7 @@ import WhatsAppSendIcon from './WhatsAppSendIcon.vue';
 import SMSSendIcon from './SMSSendIcon.vue';
 import MaxSendIcon from './MaxSendIcon.vue';
 import TelegramSendIcon from './TelegramSendIcon.vue';
+import SendIcon from './SendIcon.vue';
 
 export {
   MenuIcon,
@@ -36,4 +37,5 @@ export {
   SMSSendIcon,
   MaxSendIcon,
   TelegramSendIcon,
+  SendIcon,
 }
