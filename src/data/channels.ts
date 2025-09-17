@@ -50,5 +50,34 @@ export const channels = [
     title: "TG Bot №14",
     status: "active",
     autoAccess: false
+  },
+  // Каналы для Виктора
+  {
+    branchId: "bch_6",
+    channelId: "whatsapp.W6789",
+    title: "whatsapp 79306666666 (основной)",
+    status: "active",
+    autoAccess: false
+  },
+  {
+    branchId: "bch_6",
+    channelId: "telegram.T6789",
+    title: "telegram @viktor_work",
+    status: "active",
+    autoAccess: false
+  },
+  {
+    branchId: "bch_6",
+    channelId: "sms.S6789",
+    title: "SMS 79306666666",
+    status: "active",
+    autoAccess: false
+  },
+  {
+    branchId: "bch_6",
+    channelId: "max.M6789",
+    title: "Max @viktor.work",
+    status: "active",
+    autoAccess: false
   }
 ];

@@ -36,7 +36,7 @@
       @click="sendMessage"
     >
       <span class="">
-        <WhatsAppSendIcon />
+        <component :is="sendIcon" />
       </span>
     </button>
 
@@ -52,7 +52,8 @@ import { useMessage } from '../../helpers/useMessage';
 import { t } from '../../locale/useLocale';
 import { IFilePreview, IInputMessage } from '../../types';
 import useImmediateDebouncedRef from '../../helpers/useImmediateDebouncedRef';
-import WhatsAppSendIcon from '../icons/WhatsAppSendIcon.vue';
+import { WhatsAppSendIcon, SMSSendIcon, MaxSendIcon, TelegramSendIcon } from '../icons';
+
 
 const emit = defineEmits(['send','typing']);
 
@@ -77,6 +78,11 @@ const props = defineProps({
   disabledPlaceholder: {
     type: String,
     default: null,
+  },
+  selectedChannel: {
+    type: Object,
+    required: false,
+    default: null,
   }
 })
 
@@ -85,6 +91,26 @@ const disabledSendButton = computed(() => {
   if (getMessage().text == '' && !getMessage().file) return true
   if (getMessage().isRecording) return true
   return false
+})
+
+const sendIcon = computed(() => {
+  if (!props.selectedChannel?.channelId) {
+    return WhatsAppSendIcon;
+  }
+  
+  const channelId = props.selectedChannel.channelId.toLowerCase();
+  
+  if (channelId.includes('whatsapp') || channelId.includes('waba')) {
+    return WhatsAppSendIcon;
+  } else if (channelId.includes('telegram')) {
+    return TelegramSendIcon;
+  } else if (channelId.includes('sms')) {
+    return SMSSendIcon;
+  } else if (channelId.includes('max')) {
+    return MaxSendIcon;
+  }
+  
+  return WhatsAppSendIcon;
 })
 
 watch(

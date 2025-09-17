@@ -162,6 +162,7 @@
                 </Feed>
                 <ChatInput 
                   :focus-on-input-area="inputFocus"
+                  :selected-channel="selectedDialog"
                 >
                   <template #inline-buttons>
                     <!-- <ButtonCommandsSelector
@@ -459,6 +460,14 @@ const recentAttributeChannels = computed(() => {
     d => d.channelId?.includes('telegram') || d.channelId?.includes('telegrambot')
   ).toSorted((d1, d2) => d2['lastActivity.timestamp'] - d1['lastActivity.timestamp']);
 
+  const smsDialogs = dialogs?.filter(
+    d => d.channelId?.includes('sms')
+  ).toSorted((d1, d2) => d2['lastActivity.timestamp'] - d1['lastActivity.timestamp']);
+
+  const maxDialogs = dialogs?.filter(
+    d => d.channelId?.includes('max')
+  ).toSorted((d1, d2) => d2['lastActivity.timestamp'] - d1['lastActivity.timestamp']);
+
   if (whatsappDialogs?.length) {
     recentAttributeChannels['whatsapp'] = {
       attributeId: whatsappDialogs[0]?.attributeId, 
@@ -472,6 +481,22 @@ const recentAttributeChannels = computed(() => {
       attributeId: telegramDialogs[0]?.attributeId, 
       channelId: telegramDialogs[0]?.channelId,
       tooltip: channels.value.find(ch => ch.channelId === telegramDialogs[0]?.channelId)?.title,
+    };
+  }
+
+  if (smsDialogs?.length) {
+    recentAttributeChannels['sms'] = {
+      attributeId: smsDialogs[0]?.attributeId, 
+      channelId: smsDialogs[0]?.channelId,
+      tooltip: channels.value.find(ch => ch.channelId === smsDialogs[0]?.channelId)?.title,
+    };
+  }
+
+  if (maxDialogs?.length) {
+    recentAttributeChannels['max'] = {
+      attributeId: maxDialogs[0]?.attributeId, 
+      channelId: maxDialogs[0]?.channelId,
+      tooltip: channels.value.find(ch => ch.channelId === maxDialogs[0]?.channelId)?.title,
     };
   }
 

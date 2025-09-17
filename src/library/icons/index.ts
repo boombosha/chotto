@@ -12,6 +12,11 @@ import CommunicationPanelSubmenuTelegramIcon from './CommunicationPanelSubmenuTe
 import CommunicationPanelSubmenuMaxIcon from './CommunicationPanelSubmenuMaxIcon.vue';
 import CommunicationPanelSubmenuSMSIcon from './CommunicationPanelSubmenuSMSIcon.vue';
 
+import WhatsAppSendIcon from './WhatsAppSendIcon.vue';
+import SMSSendIcon from './SMSSendIcon.vue';
+import MaxSendIcon from './MaxSendIcon.vue';
+import TelegramSendIcon from './TelegramSendIcon.vue';
+
 export {
   MenuIcon,
 
@@ -26,4 +31,9 @@ export {
   CommunicationPanelSubmenuTelegramIcon,
   CommunicationPanelSubmenuMaxIcon,
   CommunicationPanelSubmenuSMSIcon,
+
+  WhatsAppSendIcon,
+  SMSSendIcon,
+  MaxSendIcon,
+  TelegramSendIcon,
 }
