@@ -402,6 +402,7 @@ export const messages = [
     timestamp: '1756960441',
     subText: 'Виктор',
     header: 'Анна',
+    backgroundColor: '#FFCDD2',
     avatar:'https://placehold.jp/30/336633/ffffff/64x64.png?text=VIK',
     actions: [
       { action: 'edit', title: 'изменить', icon: 'https://placehold.jp/30/336633/ffffff/64x64.png?text=pin' },
@@ -417,6 +418,7 @@ export const messages = [
     direction: 'outgoing',
     status: 'received',
     subText: 'Анна',
+    backgroundColor: '#F8BBD0',
     avatar:'https://placehold.jp/30/f1048e/ffffff/64x64.png?text=Ann',
     timestamp: '1756979101',
     header: 'Вы'
@@ -430,6 +432,7 @@ export const messages = [
     direction: 'outgoing',
     status: 'received',
     subText: 'Анна',
+    backgroundColor: '#E1BEE7',
     avatar:'https://placehold.jp/30/f1048e/ffffff/64x64.png?text=Ann',
     timestamp: '1756979102',
     header: 'Вы'
@@ -442,6 +445,7 @@ export const messages = [
     text: "Почему молчишь?",
     direction: 'outgoing',
     subText: 'Анна',
+    backgroundColor: '#D1C4E9',
     avatar:'https://placehold.jp/30/f1048e/ffffff/64x64.png?text=Ann',
     status: 'received',
     timestamp: '1756979103',
@@ -455,6 +459,7 @@ export const messages = [
     text: "Да, занят",
     direction: 'incoming',
     subText: 'Виктор',
+    backgroundColor: '#C5CAE9',
     avatar:'https://placehold.jp/30/336633/ffffff/64x64.png?text=VIK',
     status: 'received',
     timestamp: '1756979104',
@@ -468,6 +473,7 @@ export const messages = [
     text: "Теперь свободен, кидай отчёт",
     direction: 'incoming',
     subText: 'Виктор',
+    backgroundColor: '#BBDEFB',
     avatar:'https://placehold.jp/30/336633/ffffff/64x64.png?text=VIK',
     status: 'received',
     timestamp: '1756979105',
@@ -486,6 +492,7 @@ export const messages = [
     status: 'received',
     timestamp: '1756979106',
     header: 'Анна',
+    backgroundColor: '#B3E5FC',
     text: "Держи актуальный отчет."
   },
   {
@@ -501,6 +508,7 @@ export const messages = [
     status: 'received',
     timestamp: '1757065501',
     header: 'Анна',
+    backgroundColor: '#B2EBF2',
     text: "Держи ещё актуальный отчет."
   },
   {
@@ -514,6 +522,7 @@ export const messages = [
     direction: 'outgoing',
     status: 'received',
     timestamp: '1757065502',
+    backgroundColor: '#B2DFDB',
     header: 'Георгий'
   },
   {
@@ -526,6 +535,7 @@ export const messages = [
     status: 'read',
     timestamp: '1757151901',
     header: 'Виктор',
+    backgroundColor: '#C8E6C9',
     subText: 'Виктор',
     avatar:'https://placehold.jp/30/336633/ffffff/64x64.png?text=VIK',
     reply: {
@@ -548,6 +558,7 @@ export const messages = [
     timestamp: '1757151902',
     header: 'Виктор',
     subText: 'Виктор',
+    backgroundColor: '#DCEDC8',
     avatar:'https://placehold.jp/30/336633/ffffff/64x64.png?text=VIK',
   },
   {
@@ -563,6 +574,7 @@ export const messages = [
     timestamp: '1757151903',
     header: 'Виктор',
     subText: 'Виктор',
+    backgroundColor: '#F0F4C3',
     avatar:'https://placehold.jp/30/336633/ffffff/64x64.png?text=VIK',
   },
   {
@@ -576,6 +588,7 @@ export const messages = [
     timestamp: '1757238301',
     header: 'Ярослав',
     subText: 'Ярослав',
+    backgroundColor: '#FFE0B2',
     avatar:'https://placehold.jp/30/1b97e4/ffffff/64x64.png?text=Jar',
   },
   {
@@ -589,6 +602,7 @@ export const messages = [
     timestamp: '1757238302',
     header: 'Ярослав',
     subText: 'Ярослав',
+    backgroundColor: '#FFCCBC',
     avatar:'https://placehold.jp/30/1b97e4/ffffff/64x64.png?text=Jar',
     embed: {
       type: 'rutube',
@@ -606,6 +620,7 @@ export const messages = [
     timestamp: '1757238303',
     header: 'Ярослав',
     subText: 'Ярослав',
+    backgroundColor: '#D7CCC8',
     avatar:'https://placehold.jp/30/1b97e4/ffffff/64x64.png?text=Jar',
     embed: {
       type: 'rutube',
@@ -623,6 +638,7 @@ export const messages = [
     timestamp: '1757324701',
     header: 'Анна',
     subText: 'Анна',
+    backgroundColor: '#CFD8DC',
     avatar:'https://placehold.jp/30/f1048e/ffffff/64x64.png?text=Ann',
   },
   {
@@ -636,6 +652,7 @@ export const messages = [
     timestamp: '1757324702',
     header: 'Анна',
     subText: 'Анна',
+    backgroundColor: '#FF80AB',
     avatar:'https://placehold.jp/30/f1048e/ffffff/64x64.png?text=Ann',
     embed: {
       type: 'rutube',
@@ -653,6 +670,7 @@ export const messages = [
     timestamp: '1757411101',
     header: 'Ярослав',
     subText: 'Ярослав',
+    backgroundColor: '#EA80FC',
     avatar:'https://placehold.jp/30/1b97e4/ffffff/64x64.png?text=Jar',
   },
   {
@@ -665,6 +683,7 @@ export const messages = [
     status: 'received',
     timestamp: '1757411102',
     header: 'Ярослав',
+    backgroundColor: '#64B5F6',
     subText: 'Ярослав',
     avatar:'https://placehold.jp/30/1b97e4/ffffff/64x64.png?text=Jar',
   },
@@ -678,6 +697,7 @@ export const messages = [
     status: 'received',
     timestamp: '1757411103',
     header: 'Ярослав',
+    backgroundColor: '#82B1FF',
     subText: 'Ярослав',
     avatar:'https://placehold.jp/30/1b97e4/ffffff/64x64.png?text=Jar',
   },
@@ -691,6 +711,7 @@ export const messages = [
     status: 'received',
     timestamp: '1757497501',
     header: 'Ярослав',
+    backgroundColor: '#80DEEA',
     subText: 'Ярослав',
     avatar:'https://placehold.jp/30/1b97e4/ffffff/64x64.png?text=Jar',
   },
@@ -704,6 +725,7 @@ export const messages = [
     status: 'read',
     timestamp: '1757497524',
     header: 'Анна',
+    backgroundColor: '#E6EE9C',
     subText: 'Анна',
     avatar:'https://placehold.jp/30/f1048e/ffffff/64x64.png?text=Ann',
   },
@@ -719,6 +741,7 @@ export const messages = [
     timestamp: '1757497551',
     header: 'Анна',
     subText: 'Анна',
+    backgroundColor: '#FF9E80',
     avatar:'https://placehold.jp/30/f1048e/ffffff/64x64.png?text=Ann',
   },
 

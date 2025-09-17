@@ -5,6 +5,7 @@
       applyStyle(message)
     ]"
     :messageId="message.messageId"
+    :style="message.position === 'right' && message.backgroundColor ? {'--chotto-message-right-bg': message.backgroundColor} : null"
   >
     <img
       v-if="message.avatar"
