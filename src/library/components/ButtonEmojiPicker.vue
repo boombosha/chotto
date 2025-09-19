@@ -17,9 +17,12 @@
       class="emoji"
     >
       <EmojiPicker
-        :native="true"
+        :native="false"
         :theme="emojiTheme"
         picker-type=""
+        :additional-groups="additionalGroups"
+        :group-names="groupNames"
+        :group-order="groupOrder"
         @select="onSelectEmoji"
       />
     </div>
@@ -34,6 +37,7 @@ import {onMounted, onUnmounted, ref, inject} from 'vue'
 // import {computed} from 'vue'
 import { useMessage } from '../../helpers/useMessage';
 import SmilesIcon from '../icons/SmilesIcon.vue';
+import { additionalGroups, groupNames, groupOrder } from '../../helpers/emojiTranslations';
 
 
 const props = defineProps({
@@ -129,6 +133,7 @@ onUnmounted(() => {
   .emoji {
     position: absolute;
     bottom: 50px;
+    z-index: 2;
   }
 
 </style>
