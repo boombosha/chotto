@@ -67,6 +67,22 @@ export const messages = [
     },
   },
   {
+    chatId: 1, 
+    dialogId: 'dlg_43543555', 
+    messageId: '444',
+    timestamp: '1727027959',
+    type: "message.delimiter", 
+    text: 'диалог Telegram',
+  },
+  {
+    chatId: 1,
+    dialogId: 'dlg_43543555', 
+    messageId: 1,
+    timestamp: '1727027959',
+    type: "message.system", 
+    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  },
+  {
     chatId: 1, dialogId: 'dlg_43543555', type: "message.text", text: "Привет!", direction: 'incoming', status: 'read', timestamp: '1727027959', subText: 'test test',
     header: 'Василий',
     messageId: '2',

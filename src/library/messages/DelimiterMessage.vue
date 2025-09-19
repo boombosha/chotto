@@ -29,7 +29,7 @@ const props = defineProps({
     display: var(--chotto-delimiter-message-display, flex);
     align-items: var(--chotto-delimiter-message-align-items, center);
     justify-content: var(--chotto-delimiter-message-justify-content, center);
-    width: var(--chotto-delimiter-message-width, 90%);
+    width: var(--chotto-delimiter-message-width, 54%);
     height: var(--chotto-delimiter-message-height, 26px);
     margin: var(--chotto-delimiter-message-margin, 21px auto 21px auto);
     border-bottom: var(--chotto-delimiter-message-border-bottom, 1px solid #D9D9D9);

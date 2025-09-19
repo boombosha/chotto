@@ -26,4 +26,17 @@
 
   /* System Message */
   --chotto-system-message-bg-color: #5c4c2e;
+
+  /* Delimiter Message */
+  --chotto-delimiter-message-display: flex;
+  --chotto-delimiter-message-align-items: center;
+  --chotto-delimiter-message-justify-content: center;
+  --chotto-delimiter-message-width: 54%;
+  --chotto-delimiter-message-height: 26px;
+  --chotto-delimiter-message-margin: 21px auto 21px auto;
+  --chotto-delimiter-message-border-bottom: 1px solid var(--neutral-275);
+  --chotto-delimiter-message-text-font-size: 14px;
+  --chotto-delimiter-message-text-line-height: 1.5;
+  --chotto-delimiter-message-text-align: center;
+  --chotto-delimiter-message-text-color: var(--neutral-550);
 }
