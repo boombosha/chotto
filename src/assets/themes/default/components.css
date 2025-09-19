@@ -21,8 +21,8 @@
   --chotto-chat-input-button-padding: 14px;
 
   /* Chat Item */
-  --chotto-chat-item-padding-container: 10px 20px 10px 15px;
-  --chotto-chat-item-dialog-padding: 5px 0 0 75px;
+  --chotto-chat-item-padding-container: 10px 11px 10px 14px;
+  --chotto-chat-item-dialog-padding: 5px 11px 0 75px;
   --chotto-chat-item-border-radius: 0;
 
   /* Chat Info */
