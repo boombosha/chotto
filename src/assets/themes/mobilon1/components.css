@@ -36,6 +36,8 @@
   --chotto-chat-input-icon-color-disabled: var(--neutral-200);
   --chotto-chat-input-button-padding: 1px 0 0 3px;
   --chotto-chat-input-button-margin: 0 9px 2px 4px;
+  --chotto-chat-input-background-color-hover: var(--neutral-100);
+  --chotto-chat-input-background-color-focus: var(--neutral-175);
   --chotto-unread-min-width: 20px;
   --chotto-unread-min-height: 20px;
   --chotto-unread-font-weight: 600;

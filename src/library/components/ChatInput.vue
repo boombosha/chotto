@@ -310,6 +310,15 @@ const sendMessage = () => {
     max-height: calc(1.5em * 10);
     border-radius: var(--chotto-input-message-border-radius, var(--chotto-input-border-radius));
     font-family: var(--chotto-container-font-family);
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: var(--chotto-chat-input-background-color-hover, #f5f5f5);
+    }
+
+    &:focus {
+      background-color: var(--chotto-chat-input-background-color-focus, #e1e1e1);
+    }
 
     &:focus-visible {
       outline: none;
