@@ -235,7 +235,7 @@ export const chats = [
     metadata: '',
   },
   {
-    chatId: 4, name: "Василий", countUnread: 0, lastMessage: 'test', 'lastActivity.time': 'час назад', statusMessage: 'received', isFixed: false, status: "#00b972", actions: [
+    chatId: 4, name: "Георгий", countUnread: 0, lastMessage: 'test', 'lastActivity.time': 'час назад', statusMessage: 'received', isFixed: false, status: "#00b972", actions: [
       { action: 'edit', title: 'изменить' }, { action: 'delete', title: 'удалить' },
     ],
     metadata: '',

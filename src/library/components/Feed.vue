@@ -295,7 +295,12 @@ const componentsMap = (type) => {
 function performScrollToBottom() {
   nextTick(function () {
     const element = unref(refFeed);
+    if (!element) return;
     element.scrollTop = element.scrollHeight;
+
+    setTimeout(() => {
+      element.scrollTop = element.scrollHeight;
+    }, 300);
   })
 }
 
@@ -383,6 +388,17 @@ watch(
       }
       trackingObjects.value = document.querySelectorAll('.tracking-message')
       trackingObjects.value.forEach((obj) => observer.observe(obj))
+      
+      if (props.scrollToBottom) {
+        const element = unref(refFeed);
+        if (element) {
+          element.scrollTop = element.scrollHeight;
+          
+          setTimeout(() => {
+            element.scrollTop = element.scrollHeight;
+          }, 100);
+        }
+      }
     })
   },
   { immediate: true })
