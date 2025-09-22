@@ -44,8 +44,8 @@
   --chotto-unread-border-radius: 10px;
   
   /* Chat Item */
-  --chotto-chat-item-padding-container: 10px 11px 10px 14px;
-  --chotto-chat-item-dialog-padding: 5px 11px 0 75px;
+  --chotto-chat-item-padding-container: 10px 15px 10px 14px;
+  --chotto-chat-item-dialog-padding: 5px 15px 0 75px;
   --chotto-chat-item-border-radius: 0;
   --chotto-chat-item-name-margin-top: 2px;
   --chotto-chat-item-name-margin-bottom: 4px;

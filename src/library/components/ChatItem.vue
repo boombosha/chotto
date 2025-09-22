@@ -129,6 +129,7 @@
     <div 
       v-if="props.showDialogs && chat.dialogsExpanded"
       class="dialog__container"
+      :class="{ 'dialog__container--with-scroll': props.hasScroll }"
     >
       <div
         v-for="dialog in getSortedDialogs()"
@@ -186,6 +187,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  hasScroll: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(['select', 'action', 'expand']);
@@ -210,7 +215,14 @@ const selectDialog = (dialog) => {
 }
 
 const getClass = () => {
-  return props.chat.isSelected ? 'chat-item__selected' : '';
+  const classes: string[] = [];
+  if (props.chat.isSelected) {
+    classes.push('chat-item__selected');
+  }
+  if (props.hasScroll) {
+    classes.push('chat-item__with-scroll');
+  }
+  return classes.join(' ');
 }
 
 const getDialogClass = (dialog) => {
@@ -314,6 +326,10 @@ const onMouseLeave = (event) => {
     .chat-item__menu-button {
       background: var(--chotto-item-background-color-focus);
     }
+  }
+
+  &__with-scroll {
+    padding-right: 11px;
   }
 
   &__avatar-container {
@@ -494,6 +510,10 @@ const onMouseLeave = (event) => {
     cursor: pointer;
     gap: 5px;
     padding: var(--chotto-chat-item-dialog-padding);
+  }
+
+  &__container--with-scroll {
+    padding-right: 11px;
   }
 
   &__icon{

@@ -41,6 +41,7 @@
           class="chat-list__item"
           :chat="chat"
           :show-dialogs="props.showDialogs"
+          :has-scroll="hasScroll"
           @select="selectChat"
           @expand="expandChat"
           @action="action"
@@ -54,6 +55,7 @@
           class="chat-list__item"
           :chat="chat"
           :show-dialogs="props.showDialogs"
+          :has-scroll="hasScroll"
           @select="selectChat"
           @expand="expandChat"
           @action="action"
@@ -67,6 +69,7 @@
           class="chat-list__item"
           :chat="chat"
           :show-dialogs="props.showDialogs"
+          :has-scroll="hasScroll"
           @select="selectChat"
           @expand="expandChat"
           @action="action"
@@ -129,6 +132,7 @@ const refChatList = ref()
 const allowLoadMore = ref(false)
 const isShowButton = ref(false)
 const isScrollByMouseButton = ref(false)
+const hasScroll = ref(false)
 
 
 function scrollToTopForce() {
@@ -138,9 +142,17 @@ function scrollToTopForce() {
   })
 }
 
+const checkScroll = () => {
+  const element = unref(refChatList);
+  hasScroll.value = element.scrollHeight > element.clientHeight;
+};
+
 const scrollCheck = () => {
   const element = unref(refChatList);
   const scrollBottom = element.scrollHeight - element.scrollTop - element.clientHeight;
+  
+  checkScroll();
+  
   if (element.scrollTop > 500){
     isShowButton.value = true
   }
@@ -179,7 +191,23 @@ watch(
       const element = unref(refChatList);
       element.scrollTop = element.scrollHeight
     }
+
+    nextTick(() => {
+      checkScroll();
+    });
   }
+)
+
+watch(
+  () => refChatList.value,
+  () => {
+    if (refChatList.value) {
+      nextTick(() => {
+        checkScroll();
+      });
+    }
+  },
+  { immediate: true }
 )
 
 const startScrollWatch = (event) => {
