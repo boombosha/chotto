@@ -356,11 +356,11 @@ const sendMessage = () => {
     transition: background-color 0.2s ease;
 
     &:hover {
-      background-color: var(--chotto-chat-input-background-color-hover, #f5f5f5);
+      border-color: var(--chotto-chat-input-border-color-hover, #f5f5f5);
     }
 
     &:focus {
-      background-color: var(--chotto-chat-input-background-color-focus, #e1e1e1);
+      border-color: var(--chotto-chat-input-border-color-focus, #e1e1e1);
     }
 
     &:focus-visible {
