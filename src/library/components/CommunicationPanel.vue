@@ -53,8 +53,8 @@
       :style="{ width: menuWidth }"
     >
       <!-- Заголовок для списка контактов -->
-      <div class="menu-header">
-        {{ activeChannelType === 'phone' ? 'Телефон' : 'Недавний' }}
+      <div v-if="showRecentAttribute" class="menu-header">
+        Недавний
       </div>
 
       <!-- Недавний контакт -->
