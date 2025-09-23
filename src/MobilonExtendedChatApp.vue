@@ -83,7 +83,7 @@
                   <template #actions>
                     <div style="display: flex;">
                       <CommunicationPanel
-                        :contactAttributes="selectedChat?.contact?.attributes"
+                        :contact-attributes="selectedChat?.contact?.attributes"
                         :channels="toRaw(channels)"
                         :recent-attribute-channels="recentAttributeChannels"
                         :selected-dialog="selectedDialog"
@@ -99,23 +99,15 @@
                           <MenuIcon />
                         </span>
                       </button> -->
-                      <div class="sidebar__settings-container">
+
                       <ContactContextMenu
                         :actions="contactActions"
                         mode="click"
                         menu-side="bottom-left"
                         @click="handleContactMenuAction"
                         @button-click="handleContactButtonClick"
-                      >
-                        <button
-                          class="chat-info__button-panel"
-                      >
-                        <span class="">
-                          <MenuIcon />
-                        </span>
-                      </button>
-                    </ContactContextMenu>
-                    </div>
+                      />
+
                       <!-- <button
                         class="chat-info__button-panel"
                         @click="handleOpenSearchPanel"
@@ -279,7 +271,6 @@
 import { onMounted, ref, computed, unref, toRaw } from "vue";
 // import { nextTick } from "vue";
 import moment from 'moment';
-import MenuIcon from "./library/icons/MenuIcon.vue";
 import ContactCRMIcon from "./library/icons/ContactCRMIcon.vue";
 
 import {
@@ -958,28 +949,5 @@ onMounted(() => {
   --chotto-message-right-secondary-bg: #bbf3b2;
   --chotto-message-accent-line-color: #25D366;
   --chotto-chat-input-icon-color: #25D366;
-}
-
-.chat-info__button-panel {
-  background: none;
-  border: none;
-  padding: 5px;
-  margin-right: 10px;
-  margin-left: 10px;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-  outline: none;
-  transition: all 0.2s;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  display: flex;
-  align-self: center;
-
-  &:hover {
-    background-color: var(--neutral-125);
-    box-shadow: 0 0 0 6px var(--neutral-125);
-  }
 }
 </style>

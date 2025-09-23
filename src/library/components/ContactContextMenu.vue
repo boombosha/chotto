@@ -1,37 +1,35 @@
 <template>
-  <button
-    :id="'container-' + contextMenuId + extChatAppId"
-    ref="actionScope"
-    style="
-      position: relative;
-      width: fit-content;
-      border: none;
-      background: transparent;
-      height: fit-content;
-    "
-    @mouseenter="hover"
-    @mouseleave="hoverOut"
-  >
-    <div @click="toggle">
-      <slot />
-    </div>
-    <Teleport to="body">
-      <ContextMenu
-        :id="'context-menu-' + contextMenuId + extChatAppId"
-        :actions="actions"
-        :data-theme="getTheme().theme ? getTheme().theme : 'light'"
-        @mouseenter="hoverCM"
-        @mouseleave="hoverOutCM"
-        @click="click"
-      />
-    </Teleport>
-  </button>
+  <div class="contact-context-menu__wrapper">
+    <button
+      :id="'container-' + contextMenuId + extChatAppId"
+      ref="actionScope"
+      class="contact-context-menu__button"
+      @mouseenter="hover"
+      @mouseleave="hoverOut"
+      @click="toggle"
+    >
+      <span class="contact-context-menu__icon">
+        <MenuIcon />
+      </span>
+      <Teleport to="body">
+        <ContextMenu
+          :id="'context-menu-' + contextMenuId + extChatAppId"
+          :actions="actions"
+          :data-theme="getTheme().theme ? getTheme().theme : 'light'"
+          @mouseenter="hoverCM"
+          @mouseleave="hoverOutCM"
+          @click="click"
+        />
+      </Teleport>
+    </button>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, useId, inject, nextTick} from 'vue';
 import { ContextMenu } from '.';
 import { useTheme } from '../../helpers/useTheme';
+import MenuIcon from '../icons/MenuIcon.vue';
 
 const chatAppId = inject('chatAppId')
 const extChatAppId = inject('extChatAppId')
@@ -189,4 +187,52 @@ defineExpose({
   scoped
   lang="scss"
 >
+.contact-context-menu__wrapper {
+  display: var(--chotto-contact-context-menu-wrapper-display, flex);
+  align-items: var(--chotto-contact-context-menu-wrapper-align-items, center);
+  justify-content: var(--chotto-contact-context-menu-wrapper-justify-content, center);
+  margin-right: var(--chotto-contact-context-menu-wrapper-margin-right, 15px);
+  margin-left: var(--chotto-contact-context-menu-wrapper-margin-left, 10px);
+
+  .contact-context-menu__button {
+    background: var(--chotto-contact-context-menu-button-bg, none);
+    border: var(--chotto-contact-context-menu-button-border, none);
+    padding: var(--chotto-contact-context-menu-button-padding, 0);
+    font: var(--chotto-contact-context-menu-button-font, inherit);
+    color: var(--chotto-contact-context-menu-button-color, inherit);
+    cursor: var(--chotto-contact-context-menu-button-cursor, pointer);
+    outline: var(--chotto-contact-context-menu-button-outline, none);
+    transition: var(--chotto-contact-context-menu-button-transition, all 0.2s);
+    border-radius: var(--chotto-contact-context-menu-button-border-radius, 50%);
+    width: var(--chotto-contact-context-menu-button-width, 40px);
+    height: var(--chotto-contact-context-menu-button-height, 40px);
+    display: var(--chotto-contact-context-menu-button-display, flex);
+    align-items: var(--chotto-contact-context-menu-button-align-items, center);
+    justify-content: var(--chotto-contact-context-menu-button-justify-content, center);
+    position: var(--chotto-contact-context-menu-button-position, relative);
+    
+    &:hover {
+      background-color: var(--chotto-contact-context-menu-button-hover-bg, var(--neutral-90, #F6F6F6));
+    }
+    
+    &:active {
+      transform: var(--chotto-contact-context-menu-button-active-transform, scale(0.95));
+    }
+
+    .contact-context-menu__icon {
+      display: var(--chotto-contact-context-menu-icon-display, flex);
+      align-items: var(--chotto-contact-context-menu-icon-align-items, center);
+      justify-content: var(--chotto-contact-context-menu-icon-justify-content, center);
+    }
+  }
+}
+
+.context-menu__container {
+  display: var(--chotto-contact-context-menu-container-display, flex);
+  align-items: var(--chotto-contact-context-menu-container-align-items, center);
+  justify-content: var(--chotto-contact-context-menu-container-justify-content, center);
+  border: var(--chotto-contact-context-menu-container-border, 1px solid var(--neutral-75, #F3F3F3));
+  border-radius: var(--chotto-contact-context-menu-container-border-radius, 4px);
+  box-shadow: var(--chotto-contact-context-menu-container-box-shadow, 0px 5px 5px 1px var(--neutral-400, #a3a3a3));
+}
 </style>

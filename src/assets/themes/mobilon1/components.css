@@ -21,6 +21,42 @@
   --chotto-context-menu-items-row-gap: 0;
   --chotto-context-menu-border-color: none;
 
+  /* Contact Context Menu */
+  --chotto-contact-context-menu-wrapper-display: flex;
+  --chotto-contact-context-menu-wrapper-align-items: center;
+  --chotto-contact-context-menu-wrapper-justify-content: center;
+  --chotto-contact-context-menu-wrapper-margin-right: 15px;
+  --chotto-contact-context-menu-wrapper-margin-left: 10px;
+
+  --chotto-contact-context-menu-container-display: flex;
+  --chotto-contact-context-menu-container-align-items: center;
+  --chotto-contact-context-menu-container-justify-content: center;
+  --chotto-contact-context-menu-container-border: 1px solid var(--neutral-75);
+  --chotto-contact-context-menu-container-border-radius: 4px;
+  --chotto-contact-context-menu-container-box-shadow: 0px 5px 5px 1px var(--neutral-400);
+
+  --chotto-contact-context-menu-button-bg: none;
+  --chotto-contact-context-menu-button-border: none;
+  --chotto-contact-context-menu-button-padding: 0;
+  --chotto-contact-context-menu-button-font: inherit;
+  --chotto-contact-context-menu-button-color: inherit;
+  --chotto-contact-context-menu-button-cursor: pointer;
+  --chotto-contact-context-menu-button-outline: none;
+  --chotto-contact-context-menu-button-transition: all 0.2s;
+  --chotto-contact-context-menu-button-border-radius: 50%;
+  --chotto-contact-context-menu-button-width: 40px;
+  --chotto-contact-context-menu-button-height: 40px;
+  --chotto-contact-context-menu-button-display: flex;
+  --chotto-contact-context-menu-button-align-items: center;
+  --chotto-contact-context-menu-button-justify-content: center;
+  --chotto-contact-context-menu-button-position: relative;
+  --chotto-contact-context-menu-button-hover-bg: var(--neutral-90);
+  --chotto-contact-context-menu-button-active-transform: scale(0.95);
+
+  --chotto-contact-context-menu-icon-display: flex;
+  --chotto-contact-context-menu-icon-align-items: center;
+  --chotto-contact-context-menu-icon-justify-content: center;
+
   /* Chat List */
   --chotto-chat-list-filter-margin: 0 16px 10px 15px;
   --chotto-chat-list-items-padding: 0;
