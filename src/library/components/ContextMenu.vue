@@ -7,16 +7,29 @@
         class="context-menu__item"
         @click="click(index)"
       >
+        <!-- Компонент иконки -->
+        <component
+          v-if="action.icon && typeof action.icon === 'object'"
+          :is="action.icon"
+          class="context-menu__icon"
+        />
+        
+        <!-- Иконка как URL -->
         <img
-          v-if="action.icon"
+          v-else-if="action.icon && typeof action.icon === 'string'"
           :src="action.icon"
           width="18"
           height="18"
+          class="context-menu__icon"
         >
+        
+        <!-- PrimeVue иконка -->
         <i 
           v-else-if="action.prime"
-          :class="'pi pi-' + action.prime" 
+          :class="'pi pi-' + action.prime"
+          class="context-menu__icon" 
         />
+        
         <span 
           v-if="action.title" 
           style="white-space: nowrap;"
@@ -41,10 +54,8 @@ const emit = defineEmits(['click']);
 
 const click = (index) => {
   const action = props.actions[index];
-  // console.log('action', action);
   emit('click', action);
 }
-
 </script>
 
 <style
@@ -86,7 +97,7 @@ const click = (index) => {
     cursor: pointer;
     padding: 6px 16px;
     width: inherit;
-    /* column-gap: 12px; */
+    gap: 12px; /* Добавлен отступ между иконкой и текстом */
   }
 
   &__item:hover {
@@ -94,8 +105,13 @@ const click = (index) => {
   }
 
   &__item:not(:last-child) {
-    /* padding-bottom: 6px; */
     border-bottom: 1px solid var(--chotto-context-menu-border-color, var(--chotto-item-border-color));
+  }
+
+  &__icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
   }
 }
 </style>

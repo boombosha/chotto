@@ -25,6 +25,8 @@ import VideoRecorder from './VideoRecorder.vue';
 import ButtonCommandsSelector from './ButtonCommandsSelector.vue';
 import SplashScreen from './SplashScreen.vue';
 import CommunicationPanel from './CommunicationPanel.vue';
+import ContactContextMenu from './ContactContextMenu.vue';
+
 
 export {
   ChatInfo,
@@ -54,4 +56,5 @@ export {
   ButtonCommandsSelector,
   SplashScreen,
   CommunicationPanel,
+  ContactContextMenu,
 }
