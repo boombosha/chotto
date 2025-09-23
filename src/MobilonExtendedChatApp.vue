@@ -54,7 +54,6 @@
         <template #third-col>
           <chat-wrapper
             ref="refChatWrapper"
-            :is-open-chat-panel="isOpenChatPanel"
             :is-selected-chat="!!selectedChat"
             :chat-panel-width="chatPanelWidth"
           >
@@ -92,14 +91,31 @@
                         @select-attribute-channel="handleAttributeChannelSelect"
                         @phone-call="handlePhoneCall"
                       />
-                      <button
+                      <!-- <button
                         class="chat-info__button-panel"
                         @click="isOpenChatPanel = !isOpenChatPanel"
                       >
                         <span class="">
                           <MenuIcon />
                         </span>
+                      </button> -->
+                      <div class="sidebar__settings-container">
+                      <ContactContextMenu
+                        :actions="contactActions"
+                        mode="click"
+                        menu-side="bottom-left"
+                        @click="handleContactMenuAction"
+                        @button-click="handleContactButtonClick"
+                      >
+                        <button
+                          class="chat-info__button-panel"
+                      >
+                        <span class="">
+                          <MenuIcon />
+                        </span>
                       </button>
+                    </ContactContextMenu>
+                    </div>
                       <!-- <button
                         class="chat-info__button-panel"
                         @click="handleOpenSearchPanel"
@@ -223,7 +239,7 @@
               </SplashScreen>
             </template>
 
-            <template #chatpanel>
+            <!-- <template #chatpanel>
               <ChatPanel
                 v-if="isOpenChatPanel"
                 title="Данные контакта"
@@ -233,13 +249,13 @@
               >
                 <template #content>
                   <div>
-                    <!-- {{ selectedChat.name }}  -->
+                    <!-- {{ selectedChat.name }}
                     <!-- <button
                       class="button-close"
                       @click="isOpenChatPanel = !isOpenChatPanel"
                     >
                       <span class="pi pi-times" />
-                    </button> -->
+                    </button>
                     <ContactInfo
                       :contact="selectedChat?.contact"
                       :current-dialog="selectedDialog"
@@ -251,7 +267,7 @@
                   </div>
                 </template>
               </ChatPanel>
-            </template>
+            </template> -->
           </chat-wrapper>
         </template>
       </ExtendedLayout>
@@ -263,7 +279,8 @@
 import { onMounted, ref, computed, unref, toRaw } from "vue";
 // import { nextTick } from "vue";
 import moment from 'moment';
-import MenuIcon from "./library/icons/MenuIcon.vue"
+import MenuIcon from "./library/icons/MenuIcon.vue";
+import ContactCRMIcon from "./library/icons/ContactCRMIcon.vue";
 
 import {
   ChatInfo,
@@ -291,6 +308,7 @@ import {
   FeedFoundObjects,
   // AudioRecorder,
   CommunicationPanel,
+  ContactContextMenu,
 } from "./library";
 
 import {
@@ -376,6 +394,19 @@ const menuActions = [
       console.log('Открытие настроек...');
     }
   }
+];
+
+const contactActions = [
+  {
+    id: 'open_crm',
+    title: 'Открыть контакт в CRM',
+    disabled: false,
+    icon: ContactCRMIcon,
+    action: () => {
+      console.log('Открытие контакта...');
+      window.open('https://media1.tenor.com/m/RjINDshJG48AAAAd/cat-smile.gif');
+    }
+  },
 ];
 
 const chatsStore = useChatsStore();
@@ -530,6 +561,18 @@ const handleReturnToChats = () => {
   isSecondColVisible.value = true
   isThirdColVisible.value = false
 }
+
+const handleContactMenuAction = (action) => {
+  console.log('Выбрано действие:', action);
+  if (typeof action.action === 'function') {
+    action.action();
+  }
+};
+
+const handleContactButtonClick = () => {
+  console.log('Кнопка меню была нажата');
+};
+
 
 const handleTabClick = (tabId) => {
   dialogTabs.value.forEach(tab => {

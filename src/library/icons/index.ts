@@ -18,6 +18,8 @@ import MaxSendIcon from './MaxSendIcon.vue';
 import TelegramSendIcon from './TelegramSendIcon.vue';
 import SendIcon from './SendIcon.vue';
 
+import ContactCRMIcon from './ContactCRMIcon.vue';
+
 export {
   MenuIcon,
 
@@ -38,4 +40,6 @@ export {
   MaxSendIcon,
   TelegramSendIcon,
   SendIcon,
+
+  ContactCRMIcon,
 }
