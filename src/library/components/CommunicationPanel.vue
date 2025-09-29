@@ -22,9 +22,12 @@
       >
         <template v-if="isChannelActive(channel.type)">
           <Tooltip
-            :text="selectedChannel?.title"
+            :ref="(el) => { if (el) channelTooltipRef = el }"
+            :text="showDefaultChannelTooltip ? 'Выбран канал по умолчанию, можно изменить в настройках профиля' : selectedChannel?.title"
             position="bottom-left"
             :offset="8"
+            :trigger="showDefaultChannelTooltip ? 'auto' : 'hover'"
+            :auto-show-duration="5000"
           >
             <span class="channel-icon">
               <component :is="channel.component" />
@@ -53,7 +56,10 @@
       :style="{ width: menuWidth }"
     >
       <!-- Заголовок для списка контактов -->
-      <div v-if="showRecentAttribute" class="menu-header">
+      <div 
+        v-if="showRecentAttribute" 
+        class="menu-header"
+      >
         Недавний
       </div>
 
@@ -171,7 +177,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
+import { ref, watch, onMounted, onUnmounted, computed, nextTick } from 'vue';
 import Tooltip from './Tooltip.vue';
 
 import { 
@@ -213,6 +219,16 @@ const props = defineProps({
     required: false,
     default: () => ({})
   },
+  messages: {
+    type: Array,
+    required: false,
+    default: () => []
+  },
+  selectedChat: {
+    type: Object,
+    required: false,
+    default: null
+  },
 });
 
 const emit = defineEmits(['select-attribute-channel', 'phone-call']);
@@ -231,6 +247,9 @@ const isRecentAttributeHovered = ref(false);
 const selectedChannelType = ref(null);
 const selectedChannel = ref({});
 const subMenuTop = ref(0);
+const showDefaultChannelTooltip = ref(false);
+const defaultChannelTooltipTimer = ref(null);
+const channelTooltipRef = ref(null);
 
 // Constants
 const CHANNEL_TYPES = ['phone', 'whatsapp', 'telegram', 'max', 'sms'];
@@ -307,6 +326,31 @@ const getChannelTypeFromId = (channelId) => {
   if (type.includes('telegrambot')) return 'telegram';
   
   return type;
+};
+
+const isChannelEmpty = (channelId) => {
+  
+  if (!channelId || !props.messages) return true;
+  
+  const chatId = props.selectedChat?.chatId;
+  if (!chatId) return true;
+  
+  const channelMessages = props.messages.filter(msg => 
+    msg.chatId === chatId && 
+    msg.dialogId === props.selectedDialog?.dialogId
+  );
+  
+  const hasNonSystemMessages = channelMessages.some(msg => 
+    msg.type !== 'message.system' && 
+    msg.type !== 'message.delimiter' && 
+    msg.type !== 'system' && 
+    msg.type !== 'system_message' && 
+    msg.type !== 'notification'
+  );
+  
+  const isEmpty = !hasNonSystemMessages;
+  
+  return isEmpty;
 };
 
 const hasMultipleChannels = (channelType) => {
@@ -448,6 +492,13 @@ const selectSingleChannel = (attribute, channelId) => {
   selectedChannelType.value = activeChannelType.value;
   selectedChannel.value = props.channels.find(ch => ch.channelId === channelId);
   console.log('TEST selectedChannel.value', selectedChannel.value)
+  
+  if (isChannelEmpty(channelId)) {
+    showDefaultChannelTooltipWithTimer();
+  } else {
+    clearDefaultChannelTooltip();
+  }
+  
   closeMenu();
 };
 
@@ -461,6 +512,13 @@ const selectChannelForRecentAttribute = (channelId) => {
   selectedChannelType.value = activeChannelType.value;
   selectedChannel.value = props.channels.find(ch => ch.channelId === channelId);
   console.log('TEST selectedChannel.value', selectedChannel.value)
+  
+  if (isChannelEmpty(channelId)) {
+    showDefaultChannelTooltipWithTimer();
+  } else {
+    clearDefaultChannelTooltip();
+  }
+  
   closeMenu();
 };
 
@@ -522,6 +580,12 @@ const selectChannel = (channelId) => {
     selectedChannelType.value = activeChannelType.value;
     selectedChannel.value = props.channels.find(ch => ch.channelId === channelId);
     console.log('TEST selectedChannel.value', selectedChannel.value)
+    
+    if (isChannelEmpty(channelId)) {
+      showDefaultChannelTooltipWithTimer();
+    } else {
+      clearDefaultChannelTooltip();
+    }
   }
   closeMenu();
 };
@@ -578,6 +642,7 @@ const updateSelectedChannelFromDialog = (dialog) => {
   if (!dialog) {
     selectedChannelType.value = null;
     selectedChannel.value = {};
+    clearDefaultChannelTooltip();
     return;
   }
   
@@ -585,7 +650,49 @@ const updateSelectedChannelFromDialog = (dialog) => {
   if (channelType && CHANNEL_TYPES.includes(channelType)) {
     selectedChannelType.value = channelType;
     selectedChannel.value = props.channels.find(ch => ch.channelId === dialog.channelId);
+    
+    if (isChannelEmpty(dialog.channelId)) {
+      showDefaultChannelTooltipWithTimer();
+    } else {
+      clearDefaultChannelTooltip();
+    }
   }
+};
+
+const showDefaultChannelTooltipWithTimer = () => {
+  clearDefaultChannelTooltip();
+  showDefaultChannelTooltip.value = true;
+  
+  nextTick(() => {
+    
+    const tooltipRef = Array.isArray(channelTooltipRef.value) ? channelTooltipRef.value[0] : channelTooltipRef.value;
+    
+    if (tooltipRef && typeof tooltipRef.startAutoShow === 'function') {
+      tooltipRef.startAutoShow();
+    } else {
+      console.log('startAutoShow method not found on tooltipRef');
+    }
+  });
+  
+  defaultChannelTooltipTimer.value = setTimeout(() => {
+    showDefaultChannelTooltip.value = false;
+  }, 5000);
+};
+
+const clearDefaultChannelTooltip = () => {
+  if (defaultChannelTooltipTimer.value) {
+    clearTimeout(defaultChannelTooltipTimer.value);
+    defaultChannelTooltipTimer.value = null;
+  }
+  
+  if (channelTooltipRef.value) {
+    const tooltipRef = Array.isArray(channelTooltipRef.value) ? channelTooltipRef.value[0] : channelTooltipRef.value;
+    if (tooltipRef && typeof tooltipRef.clearAutoTimer === 'function') {
+      tooltipRef.clearAutoTimer();
+    }
+  }
+  
+  showDefaultChannelTooltip.value = false;
 };
 
 // Lifecycle
@@ -600,6 +707,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', updateMenuWidth);
   document.removeEventListener('click', handleClickOutside);
+  clearDefaultChannelTooltip();
 });
 </script>
 

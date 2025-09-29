@@ -1836,4 +1836,22 @@ export const messages = [
     avatar:'https://placehold.jp/30/f1048e/ffffff/64x64.png?text=Ann',
   },
 
+  // Сообщения для Дмитрия (chatId: 8)
+  {
+    chatId: 8,
+    dialogId: 'dlg_6_new',
+    messageId: '801',
+    type: "message.system",
+    text: 'Системное сообщение для тестирования',
+    timestamp: '1757151901',
+  },
+  {
+    chatId: 8,
+    dialogId: 'dlg_6_new',
+    messageId: '802',
+    type: "message.delimiter",
+    text: 'диалог WhatsApp',
+    timestamp: '1757151902',
+  },
+
 ];

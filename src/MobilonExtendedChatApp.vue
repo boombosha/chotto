@@ -88,6 +88,8 @@
                         :recent-attribute-channels="recentAttributeChannels"
                         :selected-dialog="selectedDialog"
                         :channel-tooltips="channelTooltips"
+                        :messages="messages"
+                        :selected-chat="selectedChat"
                         @select-attribute-channel="handleAttributeChannelSelect"
                         @phone-call="handlePhoneCall"
                       />

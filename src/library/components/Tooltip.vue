@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, unref, inject, nextTick } from 'vue';
+import { computed, ref, unref, inject, nextTick, onUnmounted } from 'vue';
 // import { onMounted } from 'vue';
 import { useTheme } from '../../helpers/useTheme';
 
@@ -32,6 +32,7 @@ const { getTheme } = useTheme(chatAppId as string)
 const container = ref<HTMLElement>() 
 const tooltip = ref<HTMLElement>()
 const show = ref(false)
+const autoTimer = ref<ReturnType<typeof setTimeout> | null>(null)
 
 const props = defineProps({
   text: {
@@ -45,6 +46,15 @@ const props = defineProps({
   offset: {
     type: Number,
     default: 8,
+  },
+  trigger: {
+    type: String,
+    default: 'hover',
+    validator: (value: string) => ['hover', 'auto'].includes(value)
+  },
+  autoShowDuration: {
+    type: Number,
+    default: 5000,
   }
 })
 
@@ -53,8 +63,30 @@ const tooltipClasses = computed(() => ({
   [`tooltip--${props.position}`]: true
 }))
 
-const updatePosition = () => {
-  show.value = true
+const clearAutoTimer = () => {
+  if (autoTimer.value) {
+    clearTimeout(autoTimer.value)
+    autoTimer.value = null
+  }
+}
+
+const startAutoShow = () => {
+  console.log('startAutoShow called, trigger:', props.trigger);
+  if (props.trigger === 'auto') {
+    console.log('Starting auto show tooltip');
+    clearAutoTimer()
+    show.value = true
+    positionTooltip()
+    
+    autoTimer.value = setTimeout(() => {
+      console.log('Auto hiding tooltip after', props.autoShowDuration, 'ms');
+      show.value = false
+      autoTimer.value = null
+    }, props.autoShowDuration)
+  }
+}
+
+const positionTooltip = () => {
   nextTick(() => {
     if (container.value && tooltip.value){
       const t = tooltip.value
@@ -75,18 +107,35 @@ const updatePosition = () => {
   })
 }
 
-const hideTooltip = () => {
-  show.value = false
-  nextTick(() => {
-    const t = unref(tooltip)
-    if (t){
-      t.style.top = '0'
-      t.style.left = '0'
-    }
-  })
-  
+const updatePosition = () => {
+  if (props.trigger === 'hover') {
+    show.value = true
+  }
+  positionTooltip()
 }
 
+const hideTooltip = () => {
+  if (props.trigger === 'hover') {
+    show.value = false
+    nextTick(() => {
+      const t = unref(tooltip)
+      if (t){
+        t.style.top = '0'
+        t.style.left = '0'
+      }
+    })
+  }
+}
+
+onUnmounted(() => {
+  clearAutoTimer()
+})
+
+
+defineExpose({
+  startAutoShow,
+  clearAutoTimer
+})
 </script>
 
 <style scoped lang="scss">
