@@ -23,7 +23,7 @@
         <template v-if="isChannelActive(channel.type)">
           <Tooltip
             :text="selectedChannel?.title"
-            position="bottom"
+            position="bottom-left"
             :offset="8"
           >
             <span class="channel-icon">
@@ -35,7 +35,7 @@
         <template v-else>
           <Tooltip
             :text="getTooltipText(channel.type)"
-            position="bottom"
+            position="bottom-left"
             :offset="8"
           >
             <span class="channel-icon">
