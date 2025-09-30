@@ -34,47 +34,65 @@
       @mousedown="startScrollWatch"
       @mouseup="stopScrollWatch"
     >
-      <div class="chat-list__fixed-items-top">
-        <ChatItem
-          v-for="chat in getSortedAndFilteredChats().filter(c => c.isFixedTop)"
-          :key="chat.chatId"
-          class="chat-list__item"
-          :chat="chat"
-          :show-dialogs="props.showDialogs"
-          :has-scroll="hasScroll"
-          @select="selectChat"
-          @expand="expandChat"
-          @action="action"
-        />
+      <!-- Пустое состояние -->
+      <div 
+        v-if="getSortedAndFilteredChats().length === 0"
+        class="chat-list__no-data"
+      >
+        <div class="chat-list__placeholder">
+          <p class="chat-list__placeholder-title">
+            Нет контактных данных, чтобы начать чат
+          </p>
+          <p class="chat-list__placeholder-hint">
+            Добавьте номер телефона или имя Telegram в карточку контакта
+          </p>
+        </div>
       </div>
 
-      <div class="chat-list__scrollable-items">
-        <ChatItem
-          v-for="chat in getSortedAndFilteredChats().filter(c => !c.isFixedBottom && !c.isFixedTop)"
-          :key="chat.chatId"
-          class="chat-list__item"
-          :chat="chat"
-          :show-dialogs="props.showDialogs"
-          :has-scroll="hasScroll"
-          @select="selectChat"
-          @expand="expandChat"
-          @action="action"
-        />
-      </div>
+      <!-- Обычное состояние с чатами -->
+      <template v-else>
+        <div class="chat-list__fixed-items-top">
+          <ChatItem
+            v-for="chat in getSortedAndFilteredChats().filter(c => c.isFixedTop)"
+            :key="chat.chatId"
+            class="chat-list__item"
+            :chat="chat"
+            :show-dialogs="props.showDialogs"
+            :has-scroll="hasScroll"
+            @select="selectChat"
+            @expand="expandChat"
+            @action="action"
+          />
+        </div>
 
-      <div class="chat-list__fixed-items-bottom">
-        <ChatItem
-          v-for="chat in getSortedAndFilteredChats().filter(c => c.isFixedBottom)"
-          :key="chat.chatId"
-          class="chat-list__item"
-          :chat="chat"
-          :show-dialogs="props.showDialogs"
-          :has-scroll="hasScroll"
-          @select="selectChat"
-          @expand="expandChat"
-          @action="action"
-        />
-      </div>
+        <div class="chat-list__scrollable-items">
+          <ChatItem
+            v-for="chat in getSortedAndFilteredChats().filter(c => !c.isFixedBottom && !c.isFixedTop)"
+            :key="chat.chatId"
+            class="chat-list__item"
+            :chat="chat"
+            :show-dialogs="props.showDialogs"
+            :has-scroll="hasScroll"
+            @select="selectChat"
+            @expand="expandChat"
+            @action="action"
+          />
+        </div>
+
+        <div class="chat-list__fixed-items-bottom">
+          <ChatItem
+            v-for="chat in getSortedAndFilteredChats().filter(c => c.isFixedBottom)"
+            :key="chat.chatId"
+            class="chat-list__item"
+            :chat="chat"
+            :show-dialogs="props.showDialogs"
+            :has-scroll="hasScroll"
+            @select="selectChat"
+            @expand="expandChat"
+            @action="action"
+          />
+        </div>
+      </template>
     </div>
     <transition>
       <button
@@ -387,6 +405,29 @@ const handleTabClick = (tabId) => {
   &__icon-up {
     font-size: var(--chotto-button-icon-size);
     color: var(--chotto-button-color-active);
+  }
+
+  &__no-data {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  &__placeholder {
+    text-align: center;
+  }
+
+  &__placeholder-title {
+    font-size: var(--chotto-chat-list-placeholder-title-font-size, 20px);
+    font-weight: var(--chotto-chat-list-placeholder-title-font-weight, 600);
+    margin: var(--chotto-chat-list-placeholder-title-margin, 0 0 14px 0);
+    color: var(--chotto-chat-list-placeholder-title-color, #1E1E1E);
+  }
+
+  &__placeholder-hint {
+    font-size: var(--chotto-chat-list-placeholder-hint-font-size, 16px);
+    margin: var(--chotto-chat-list-placeholder-hint-margin, 0);
   }
 }
 

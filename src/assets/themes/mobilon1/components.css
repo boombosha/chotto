@@ -66,6 +66,13 @@
   --chotto-chat-list-container-border-bottom-width: 416px;
   --chotto-chat-list-container-border-bottom-height: 1px;
 
+  --chotto-chat-list-placeholder-title-font-size: 20px;
+  --chotto-chat-list-placeholder-title-font-weight: 600;
+  --chotto-chat-list-placeholder-title-color: var(--chotto-primary-text-color);
+  --chotto-chat-list-placeholder-title-margin: 0 0 14px 0;
+  --chotto-chat-list-placeholder-hint-font-size: 16px;
+  --chotto-chat-list-placeholder-hint-margin: 0;
+
   /* Chat Input */
   --chotto-chat-input-container-bg: #ffffff;
   --chotto-chat-input-icon-color: var(--neutral-600);
