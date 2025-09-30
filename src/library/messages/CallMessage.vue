@@ -20,7 +20,13 @@
       v-if="message.subText"
       class="call-message__subtext"
     >
-      {{ message.subText }}
+      <Tooltip
+        :text="channelInfo"
+        :position="message.position === 'left' ? 'right' : 'left'"
+        :offset="8"
+      >
+        {{ message.subText }}
+      </Tooltip>
     </p>
 
     <div class="call-message__content">
@@ -105,9 +111,10 @@
   setup
   lang="ts"
 >
-import { ref, inject} from 'vue'
+import { ref, inject, computed} from 'vue'
 import { ICallMessage } from '../../types'
 import { useTheme } from '../../helpers/useTheme';
+import Tooltip from '../components/Tooltip.vue';
 
 const chatAppId = inject('chatAppId')
 const { getTheme } = useTheme(chatAppId as string)
@@ -121,10 +128,23 @@ const props = defineProps({
   applyStyle: {
     type: Function,
     default: () => {return null}
+  },
+  subtextTooltipData: {
+    type: Object,
+    required: false,
+    default: () => ({})
   }
 });
 
 const isFullTranscript = ref(false)
+
+// Computed property for channel info from tooltip data
+const channelInfo = computed(() => {
+  if (props.subtextTooltipData && props.subtextTooltipData[props.message.messageId]) {
+    return props.subtextTooltipData[props.message.messageId]
+  }
+  return props.message.subText || ''
+})
 
 const elementType = {
   textDialog: 'textDialog',
@@ -257,6 +277,7 @@ function getClass(element, type) {
   &__subtext {
     font-size: var(--chotto-additional-text-font-size);
     color: var(--chotto-secondary-text-color);
+    cursor: pointer;
   }
 
   &__avatar {

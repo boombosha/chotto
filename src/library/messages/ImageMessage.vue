@@ -21,7 +21,13 @@
       v-if="message.subText && isFirstInSeries"
       class="image-message__subtext"
     >
-      {{ message.subText }}
+      <Tooltip
+        :text="channelInfo"
+        :position="message.position === 'left' ? 'right' : 'left'"
+        :offset="8"
+      >
+        {{ message.subText }}
+      </Tooltip>
     </p>
 
     <div class="image-message__content" :class="{ 'is-first': isFirstInSeries, 'with-avatar-indent': !isFirstInSeries && message.avatar }">
@@ -165,6 +171,7 @@ import { getStatus, statuses } from "../../helpers";
 import { IImageMessage } from '../../types';
 import BaseReplyMessage from './BaseReplyMessage.vue'
 import LinkPreview from './LinkPreview.vue'
+import Tooltip from '../components/Tooltip.vue';
 import EmbedPreview from './EmbedPreview.vue';
 import ModalFullscreen from '../modals/modal-wrapper/ModalFullscreen.vue';
 import { useTheme } from '../../helpers/useTheme';
@@ -185,6 +192,11 @@ const props = defineProps({
   isFirstInSeries: {
     type: Boolean,
     default: true
+  },
+  subtextTooltipData: {
+    type: Object,
+    required: false,
+    default: () => ({})
   }
 });
 
@@ -193,6 +205,14 @@ const emit = defineEmits(['action', 'reply']);
 const isOpenModal = ref(false);
 
 const isOpenMenu = ref(false)
+
+// Computed property for channel info from tooltip data
+const channelInfo = computed(() => {
+  if (props.subtextTooltipData && props.subtextTooltipData[props.message.messageId]) {
+    return props.subtextTooltipData[props.message.messageId]
+  }
+  return props.message.subText || ''
+})
 const buttonMenuVisible = ref(false);
 const buttonDownloadVisible = ref(false)
 const linkedText = ref('')
@@ -353,6 +373,7 @@ const closeModal = () => isOpenModal.value = false
   &__subtext {
     font-size: var(--chotto-additional-text-font-size);
     color: var(--chotto-secondary-text-color);
+    cursor: pointer;
   }
 
   &__preview-button {

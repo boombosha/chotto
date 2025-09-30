@@ -144,6 +144,7 @@
                   :apply-style="setMessageClass"
                   :feed-keyboards="feedKeyboards"
                   feed-keyboard-align="left"
+                  :subtext-tooltip-data="subtextTooltipData"
                   @message-action="messageAction"
                   @load-more="loadMore"
                   @load-more-down="loadMoreDown"
@@ -423,6 +424,7 @@ const inputFocus = ref(false)
 const filebumpUrl = ref('https://filebump2.services.mobilon.ru');
 const clickedReply = ref('')
 const foundMessages = ref([])
+// const subtextTooltipData = ref({})
 
 // const dialogTabs = ref([]);
 const dialogTabs = ref([
@@ -431,6 +433,43 @@ const dialogTabs = ref([
   { id: 'rejected', label: 'Непринятые', count: 1, active: false },
 ]);
 
+const subtextTooltipData = ref({
+  // Сообщения из чата Виктора (chatId: 6)
+  '601': 'Канал: WhatsApp 79306666666 (основной)',
+  '602': 'Канал: WhatsApp 79306666666 (основной)', 
+  '603': 'Канал: WhatsApp 79306666666 (основной)',
+  '604': 'Канал: WhatsApp 79306666666 (основной)',
+  '605': 'Канал: WhatsApp 79306666666 (основной)',
+  '606': 'Канал: WhatsApp 79306666666 (основной)',
+  '607': 'Канал: WhatsApp 79306666666 (основной)',
+  '608': 'Канал: WhatsApp 79306666666 (основной)',
+  '609': 'Канал: WhatsApp 79306666666 (основной)',
+  '610': 'Канал: WhatsApp 79306666666 (основной)',
+  '613': 'Канал: WhatsApp 79306666666 (основной)',
+  '612': 'Канал: WhatsApp 79306666666 (основной)',
+  '614': 'Канал: WhatsApp 79306666666 (основной)',
+  '615': 'Канал: WhatsApp 79306666666 (основной)',
+  '616': 'Канал: WhatsApp 79306666666 (основной)',
+  '617': 'Канал: WhatsApp 79306666666 (основной)',
+  '618': 'Канал: WhatsApp 79306666666 (основной)',
+  '619': 'Канал: WhatsApp 79306666666 (основной)',
+  
+  // Telegram диалог Виктора
+  '620': 'Канал: Telegram @viktor_work',
+  '621': 'Канал: Telegram @viktor_work',
+  '622': 'Канал: Telegram @viktor_work',
+  
+  // SMS диалог Виктора  
+  '623': 'Канал: SMS 79306666666',
+  '624': 'Канал: SMS 79306666666',
+  
+  // Max диалог Виктора
+  '625': 'Канал: Max @viktor.work',
+  '626': 'Канал: Max @viktor.work',
+  '627': 'Канал: Max @viktor.work',
+  '628': 'Канал: Max @viktor.work',
+  '629': 'Канал: Max @viktor.work'
+})
 
 const feedKeyboards = ref([
   {

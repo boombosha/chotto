@@ -29,6 +29,7 @@
         :message="object"
         :apply-style="applyStyle"
         :is-first-in-series="object.isFirstInSeries"
+        :subtext-tooltip-data="subtextTooltipData"
         @action="messageAction"
         @reply="handleClickReplied"
       />
@@ -178,6 +179,11 @@ const props = defineProps({
     type: String as () => 'left' | 'center' | 'right',
     default: 'right',
     validator: (value: string) => ['left', 'center', 'right'].includes(value)
+  },
+  subtextTooltipData: {
+    type: Object,
+    required: false,
+    default: () => ({})
   }
 });
 

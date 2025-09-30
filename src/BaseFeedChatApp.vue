@@ -8,6 +8,7 @@
         <ChatInfo :chat="selectedChat" />
         <Feed
           :objects="messages"
+          :subtext-tooltip-data="subtextTooltipData"
           @message-action="messageAction"
           @load-more="loadMore"
         />
@@ -91,6 +92,7 @@ const messages = ref([]);
 const userProfile = ref({});
 const channels = ref([]);
 const sidebarItems = ref([]);
+const subtextTooltipData = ref({});
 
 // const isOpenChatPanel = ref(false);
 

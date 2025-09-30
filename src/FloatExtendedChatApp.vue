@@ -68,6 +68,7 @@
                   :objects="messages"
                   :is-scroll-to-bottom-on-update-objects-enabled="isScrollToBottomOnUpdateObjectsEnabled"
                   :scroll-to="clickedReply"
+                  :subtext-tooltip-data="subtextTooltipData"
                   @message-action="messageAction"
                   @load-more="loadMore"
                 />
@@ -185,6 +186,7 @@ const notFoundMessage = ref(false)
 const clickedReply = ref('')
 const foundMessages = ref([])
 const isScrollToBottomOnUpdateObjectsEnabled = ref(false);
+const subtextTooltipData = ref({})
 const actions = [
   {action: 'search', title: 'Поиск'},
 ];

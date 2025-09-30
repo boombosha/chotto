@@ -22,7 +22,13 @@
       v-if="message.subText && isFirstInSeries"
       class="text-message__subtext"
     >
-      {{ message.subText }}
+      <Tooltip
+        :text="channelInfo"
+        :position="message.position === 'left' ? 'right' : 'left'"
+        :offset="8"
+      >
+        {{ message.subText }}
+      </Tooltip>
     </p>
 
     <div
@@ -113,6 +119,7 @@ import { ITextMessage } from '../../types';
 import BaseReplyMessage from './BaseReplyMessage.vue'
 import LinkPreview from './LinkPreview.vue'
 import EmbedPreview from './EmbedPreview.vue';
+import Tooltip from '../components/Tooltip.vue';
 
 // Define props
 const props = defineProps({
@@ -127,6 +134,11 @@ const props = defineProps({
   isFirstInSeries: {
     type: Boolean,
     default: true
+  },
+  subtextTooltipData: {
+    type: Object,
+    required: false,
+    default: () => ({})
   }
 });
 
@@ -135,6 +147,14 @@ const emit = defineEmits(['action','reply']);
 const isOpenMenu = ref(false)
 const buttonMenuVisible = ref(false);
 const linkedText = ref('')
+
+// Computed property for channel info from tooltip data
+const channelInfo = computed(() => {
+  if (props.subtextTooltipData && props.subtextTooltipData[props.message.messageId]) {
+    return props.subtextTooltipData[props.message.messageId]
+  }
+  return props.message.subText || ''
+})
 
 watch(
   () => props.message.text,
@@ -284,6 +304,7 @@ function getClass(message) {
   &__subtext {
     font-size: var(--chotto-additional-text-font-size);
     color: var(--chotto-secondary-text-color);
+    cursor: pointer;
   }
 
   &__avatar {

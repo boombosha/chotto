@@ -791,10 +791,10 @@ export const messages = [
     status: 'received',
     url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
     timestamp: '1757497551',
-    header: 'Анна',
-    subText: 'Анна',
+    header: 'Виктория',
+    subText: 'Виктория',
     backgroundColor: '#FF9E80',
-    avatar:'https://placehold.jp/30/f1048e/ffffff/64x64.png?text=Ann',
+    avatar:'https://placehold.jp/30/c775c4/ffffff/64x64.png?text=Vik',
   },
 
   // Telegram Виктора

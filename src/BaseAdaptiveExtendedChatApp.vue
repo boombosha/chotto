@@ -122,6 +122,7 @@
                   :enable-double-click-reply="true"
                   :scroll-to="clickedReply"
                   :scroll-to-bottom="scrollToBottomOnSelectChat || isScrollToBottomOnUpdateObjectsEnabled"
+                  :subtext-tooltip-data="subtextTooltipData"
                   @message-action="messageAction"
                   @load-more="loadMore"
                   @load-more-down="loadMoreDown"
@@ -300,6 +301,7 @@ const inputFocus = ref(false)
 const filebumpUrl = ref('https://filebump2.services.mobilon.ru');
 const clickedReply = ref('')
 const foundMessages = ref([])
+const subtextTooltipData = ref({})
 
 const feedSearchFeedCol = ref(false)
 const sidebarFirstCol = ref(true)

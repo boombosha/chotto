@@ -22,7 +22,13 @@
       v-if="message.subText && isFirstInSeries"
       class="audio-message__subtext"
     >
-      {{ message.subText }}
+      <Tooltip
+        :text="channelInfo"
+        :position="message.position === 'left' ? 'right' : 'left'"
+        :offset="8"
+      >
+        {{ message.subText }}
+      </Tooltip>
     </p>
 
     <div
@@ -208,6 +214,7 @@ import { getStatus, statuses } from "../../helpers";
 import { IAudioMessage } from '../../types';
 import BaseReplyMessage from './BaseReplyMessage.vue'
 import LinkPreview from './LinkPreview.vue'
+import Tooltip from '../components/Tooltip.vue';
 import EmbedPreview from './EmbedPreview.vue';
 import { useTheme } from '../../helpers/useTheme';
 
@@ -227,6 +234,11 @@ const props = defineProps({
   isFirstInSeries: {
     type: Boolean,
     default: true
+  },
+  subtextTooltipData: {
+    type: Object,
+    required: false,
+    default: () => ({})
   }
 });
 
@@ -268,6 +280,14 @@ const player = ref<HTMLAudioElement | null>();
 const isPlaying = ref(false);
 const audioDuration = ref(0);
 const currentTime = ref(0)
+
+// Computed property for channel info from tooltip data
+const channelInfo = computed(() => {
+  if (props.subtextTooltipData && props.subtextTooltipData[props.message.messageId]) {
+    return props.subtextTooltipData[props.message.messageId]
+  }
+  return props.message.subText || ''
+})
 
 const isOpenMenu = ref(false)
 const buttonMenuVisible = ref(false);
@@ -526,6 +546,7 @@ onMounted(() => {
   &__subtext {
     font-size: var(--chotto-additional-text-font-size);
     color: var(--chotto-secondary-text-color);
+    cursor: pointer;
   }
 
   &__info-container {

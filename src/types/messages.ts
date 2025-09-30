@@ -10,6 +10,7 @@ export interface Reply {
   header?: string
   callDuration?: string
   isMissedCall?: boolean
+  backgroundColor?: string
 }
 
 export interface ILinkPreview {
@@ -46,6 +47,7 @@ export interface IAudioMessage {
   linkPreview?: ILinkPreview,
   embed?: object
   keyboard?: IKeyBoard[]
+  backgroundColor?: string
 }
 
 export interface ICallMessage {
@@ -64,6 +66,7 @@ export interface ICallMessage {
   transcript?: {
     dialog: IDialog[];
   };
+  backgroundColor?: string
 }
 
 export interface IDateMessage {
@@ -88,6 +91,7 @@ export interface IFileMessage {
   linkPreview?: ILinkPreview
   embed?: object
   keyboard?: IKeyBoard[]
+  backgroundColor?: string
 }
 
 export interface IImageMessage {
@@ -107,6 +111,7 @@ export interface IImageMessage {
   linkPreview?: ILinkPreview
   embed?: object
   keyboard?: IKeyBoard[]
+  backgroundColor?: string
 }
 
 export interface ISystemMessage {
@@ -134,11 +139,13 @@ export interface ITextMessage {
   linkPreview?: ILinkPreview
   embed?: object
   keyboard?: IKeyBoard[]
+  backgroundColor?: string
 }
 
 export interface ITypingMessage {
   avatar?: string
   subText?: string
+  backgroundColor?: string
 }
 
 export interface IVideoMessage {
@@ -158,4 +165,5 @@ export interface IVideoMessage {
   linkPreview?: ILinkPreview,
   embed?: object
   keyboard?: IKeyBoard[]
+  backgroundColor?: string
 }

@@ -48,6 +48,7 @@
                 :objects="messages"
                 :is-scroll-to-bottom-on-update-objects-enabled="isScrollToBottomOnUpdateObjectsEnabled"
                 :typing="selectedChat.typing ? { avatar: selectedChat.avatar, title: selectedChat.title } : false"
+                :subtext-tooltip-data="subtextTooltipData"
                 @message-action="messageAction"
                 @load-more="loadMore"
               />
@@ -180,6 +181,7 @@ const isOpenChatPanel = ref(false);
 const modalShow = ref(false);
 const modalTitle = ref("");
 const users = ref([]);
+const subtextTooltipData = ref({});
 
 // const chatApp = ref(null);
 
