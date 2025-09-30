@@ -408,7 +408,7 @@ const getAvailableChannels = (channelType) => {
 
 const getRecentAttributeByType = (channelType) => {
   const recentAttributeId = props.recentAttributeChannels[channelType]?.attributeId;
-  return props.contactAttributes.find(attr => attr.id === recentAttributeId);
+  return props.contactAttributes.find(attr => attr.id?.includes(recentAttributeId));
 };
 
 const isAttributeFrozen = (attribute) => {
