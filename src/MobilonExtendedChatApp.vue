@@ -90,6 +90,7 @@
                         :channel-tooltips="channelTooltips"
                         :messages="messages"
                         :selected-chat="selectedChat"
+                        :is-new-dialog="isNewDialog"
                         @select-attribute-channel="handleAttributeChannelSelect"
                         @phone-call="handlePhoneCall"
                       />
@@ -491,6 +492,7 @@ const isThirdColVisible = ref(false)
 const isShowReturnButton = ref(false)
 const chatPanelWidth = ref(50)
 const theme = ref('')
+const isNewDialog = ref(false)
 
 const description = ref()
 
@@ -827,6 +829,8 @@ const selectChat = (args) => {
       d.isSelected = d.dialogId === selectedDialog.value.dialogId
     )
     }
+    // Устанавливаем isNewDialog в true при выборе нового диалога
+    isNewDialog.value = true
   }
   else {
     description.value = null
@@ -838,6 +842,8 @@ const selectChat = (args) => {
         args.chat.dialogsExpanded = true
         break
       }
+      // Устанавливаем isNewDialog в true при выборе нового чата
+      isNewDialog.value = true
     }
   }
   isThirdColVisible.value = true
@@ -850,6 +856,8 @@ const selectChat = (args) => {
   setTimeout(() => {
     scrollToBottomOnSelectChat.value = false
     inputFocus.value = false
+    // Сбрасываем флаг через небольшую задержку
+    isNewDialog.value = false
   }, 50)
 };
 
@@ -907,7 +915,11 @@ const handleAttributeChannelSelect = (data) => {
       d => d.attributeId === data.attributeId && 
       d.channelId === data.channelId
     );
-    if (targetDialog) selectChat({chat: selectedChat.value, dialog: targetDialog});
+    if (targetDialog) {
+      // Устанавливаем флаг для нового диалога
+      isNewDialog.value = true
+      selectChat({chat: selectedChat.value, dialog: targetDialog});
+    }
   }
 };
 

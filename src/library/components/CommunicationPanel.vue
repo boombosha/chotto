@@ -229,6 +229,11 @@ const props = defineProps({
     required: false,
     default: null
   },
+  isNewDialog: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
 });
 
 const emit = defineEmits(['select-attribute-channel', 'phone-call']);
@@ -493,7 +498,7 @@ const selectSingleChannel = (attribute, channelId) => {
   selectedChannel.value = props.channels.find(ch => ch.channelId === channelId);
   console.log('TEST selectedChannel.value', selectedChannel.value)
   
-  if (isChannelEmpty(channelId)) {
+  if (isChannelEmpty(channelId) && props.isNewDialog) {
     showDefaultChannelTooltipWithTimer();
   } else {
     clearDefaultChannelTooltip();
@@ -513,7 +518,7 @@ const selectChannelForRecentAttribute = (channelId) => {
   selectedChannel.value = props.channels.find(ch => ch.channelId === channelId);
   console.log('TEST selectedChannel.value', selectedChannel.value)
   
-  if (isChannelEmpty(channelId)) {
+  if (isChannelEmpty(channelId) && props.isNewDialog) {
     showDefaultChannelTooltipWithTimer();
   } else {
     clearDefaultChannelTooltip();
@@ -581,7 +586,7 @@ const selectChannel = (channelId) => {
     selectedChannel.value = props.channels.find(ch => ch.channelId === channelId);
     console.log('TEST selectedChannel.value', selectedChannel.value)
     
-    if (isChannelEmpty(channelId)) {
+    if (isChannelEmpty(channelId) && props.isNewDialog) {
       showDefaultChannelTooltipWithTimer();
     } else {
       clearDefaultChannelTooltip();
@@ -651,7 +656,7 @@ const updateSelectedChannelFromDialog = (dialog) => {
     selectedChannelType.value = channelType;
     selectedChannel.value = props.channels.find(ch => ch.channelId === dialog.channelId);
     
-    if (isChannelEmpty(dialog.channelId)) {
+    if (isChannelEmpty(dialog.channelId) && props.isNewDialog) {
       showDefaultChannelTooltipWithTimer();
     } else {
       clearDefaultChannelTooltip();
