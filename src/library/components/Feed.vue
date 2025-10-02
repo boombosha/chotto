@@ -143,6 +143,7 @@ const props = defineProps({
   buttonParams: {
     type: Object as () => IFeedUnreadButton,
     required: false,
+    default: undefined,
   },
   // принудительный скролл вниз по событию извне (сообщение, смена чата)
   scrollToBottom: {
@@ -301,13 +302,25 @@ const componentsMap = (type) => {
 function performScrollToBottom() {
   nextTick(function () {
     const element = unref(refFeed);
+    // Устанавливаем мгновенный скролл для автоматического скролла при заходе в чат
+    element.style.scrollBehavior = 'auto';
     element.scrollTop = element.scrollHeight;
+    
+    // Возвращаем плавный скролл через небольшую задержку
+    setTimeout(() => {
+      element.style.scrollBehavior = 'smooth';
+    }, 100);
   })
 }
 
 function scrollToBottomForce() {
   emit('forceScrollToBottom')
-  performScrollToBottom()
+  // Для кнопки "вниз" используем плавный скролл
+  nextTick(function () {
+    const element = unref(refFeed);
+    element.style.scrollBehavior = 'smooth';
+    element.scrollTop = element.scrollHeight;
+  })
 }
 
 watch(
@@ -393,9 +406,12 @@ watch(
       if (props.scrollToBottom) {
         const element = unref(refFeed);
         if (element) {
+          // Устанавливаем мгновенный скролл для автоматического скролла при обновлении сообщений
+          element.style.scrollBehavior = 'auto';
           element.scrollTop = element.scrollHeight;
           
           setTimeout(() => {
+            element.style.scrollBehavior = 'auto';
             element.scrollTop = element.scrollHeight;
           }, 500);
         }
@@ -489,7 +505,7 @@ function updateStickyDate() {
   overflow-y: auto;
   overflow-x: hidden;
   background-image: url('../../../public/chat-background.svg');
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   padding: 10px 30px 10px 30px;
   position: relative;
   
@@ -576,4 +592,7 @@ function updateStickyDate() {
   transform: translateY(10px);
   opacity: 0;
 }
+
+/* Анимации для сообщений */
+/* (revert) убраны экспериментальные анимации и индикаторы загрузки */
 </style>
