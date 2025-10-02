@@ -15,11 +15,12 @@
         :text="stickyDateText"
       />
     </transition>
+    
     <div
       v-for="(object, index) in groupedObjects"
       :id="JSON.stringify(object)"
       :key="`${object.messageId ?? 'mid'}-${index}`"
-      class="tracking-message"
+      :class="['tracking-message', { 'new-message': object.isNewMessage }]"
       @dblclick="feedObjectDoubleClick($event,object)"
     >
       <component
@@ -134,6 +135,8 @@ const isScrollByMouseButton = ref(false)
 const showStickyDate = ref(false)
 const stickyDateText = ref('')
 let stickyHideTimer = null as unknown as number | null
+const newMessagesCount = ref(0)
+const previousObjectsLength = ref(0)
 
 const props = defineProps({
   objects: {
@@ -185,6 +188,10 @@ const props = defineProps({
     type: Object,
     required: false,
     default: () => ({})
+  },
+  isLoadingMore: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -264,6 +271,87 @@ watch(
   () => {
     if (!allowLoadMoreBottom.value) emit('loadMoreDown')
     if (!allowLoadMoreTop.value) emit('loadMore')
+  }
+)
+
+watch(
+  () => props.isLoadingMore,
+  (newValue, oldValue) => {
+
+    if (oldValue === false && newValue === true) {
+      previousObjectsLength.value = props.objects.length;
+      newMessagesCount.value = 0;
+    }
+    
+    if (oldValue === true && newValue === false) {
+      
+      nextTick(() => {
+
+        const currentObjects = props.objects;
+        if (currentObjects && currentObjects.length > previousObjectsLength.value) {
+          const addedCount = currentObjects.length - previousObjectsLength.value;
+          
+          newMessagesCount.value = addedCount;
+          
+          nextTick(() => {
+            const allMessages = document.querySelectorAll('.tracking-message');
+            const firstMessages = Array.from(allMessages).slice(0, addedCount);
+            firstMessages.forEach((msg) => {
+              msg.classList.add('new-message');
+            });
+          });
+          
+
+          setTimeout(() => {
+            let newMessages = document.querySelectorAll('.tracking-message.new-message');
+            
+            if (newMessages.length === 0) {
+              const allMessages = document.querySelectorAll('.tracking-message');
+              const firstMessages = Array.from(allMessages).slice(0, addedCount);
+              
+              if (firstMessages.length > 0) {
+                firstMessages.forEach((msg) => {
+                  msg.classList.add('new-message');
+                });
+                
+                firstMessages.forEach((msg, index) => {
+                  setTimeout(() => {
+                    msg.classList.add('animate');
+                  }, index * 150);
+                });
+                
+                setTimeout(() => {
+                  firstMessages.forEach((msg) => {
+                    msg.classList.remove('new-message', 'animate');
+                  });
+                  newMessagesCount.value = 0;
+                }, addedCount * 150 + 1500);
+                
+                return; 
+              }
+            }
+            
+            
+            if (newMessages.length > 0) {
+              newMessages.forEach((msg, index) => {
+                setTimeout(() => {
+                  msg.classList.add('animate');
+                }, index * 150);
+              });
+              
+              setTimeout(() => {
+                newMessages.forEach((msg) => {
+                  msg.classList.remove('new-message', 'animate');
+                });
+                newMessagesCount.value = 0;
+              }, addedCount * 150 + 1500);
+            } else {
+              newMessagesCount.value = 0;
+            }
+          }, 50);
+        }
+      });
+    }
   }
 )
 
@@ -388,8 +476,41 @@ const observer = new IntersectionObserver(callback, options)
 
 watch(
   () => props.objects,
-  () => {
+  (newObjects, oldObjects) => {
     nextTick(() => {
+      
+      if (oldObjects && newObjects.length > oldObjects.length) {
+        const addedCount = newObjects.length - oldObjects.length;
+        
+        setTimeout(() => {
+
+          if (props.isLoadingMore) {
+            newMessagesCount.value = addedCount;
+            previousObjectsLength.value = oldObjects.length;
+            
+            setTimeout(() => {
+              const newMessages = document.querySelectorAll('.tracking-message.new-message');
+              console.log('📱 Найдено новых сообщений для анимации:', newMessages.length);
+              
+              newMessages.forEach((msg, index) => {
+                setTimeout(() => {
+                  msg.classList.add('animate');
+                  console.log(`✨ Анимация запущена для сообщения ${index + 1}`);
+                }, index * 150);
+              });
+              
+              setTimeout(() => {
+                newMessages.forEach((msg) => {
+                  msg.classList.remove('new-message', 'animate');
+                });
+                newMessagesCount.value = 0;
+                
+              }, addedCount * 150 + 1500);
+            }, 50); 
+          }
+        }, 10); 
+      }
+      
       allowLoadMoreTop.value = true
       allowLoadMoreBottom.value = true
       scrollTopCheck(false)
@@ -438,8 +559,10 @@ watch(
   }
 )
 
+
 const groupedObjects = computed(() => {
   if (!props.objects || props.objects.length === 0) return []
+
 
   return props.objects.map((message, index, arr) => {
     const isSameSenderAsPrevious =
@@ -453,9 +576,15 @@ const groupedObjects = computed(() => {
 
     const isFirstInSeries = !isSameSenderAsPrevious || !prevIsGroupable
 
+    const isNewMessage = props.isLoadingMore && 
+      newMessagesCount.value > 0 && 
+      index < newMessagesCount.value
+    
+
     return {
       ...message,
       isFirstInSeries,
+      isNewMessage,
     }
   })
 })
@@ -594,5 +723,17 @@ function updateStickyDate() {
 }
 
 /* Анимации для сообщений */
-/* (revert) убраны экспериментальные анимации и индикаторы загрузки */
+.new-message {
+  opacity: 0 !important;
+  transform: translateY(-10px) !important;
+  transition: all 1.2s ease-in-out;
+  pointer-events: none; 
+}
+
+.new-message.animate {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  pointer-events: auto;
+}
+
 </style>
