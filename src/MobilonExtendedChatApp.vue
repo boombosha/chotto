@@ -657,6 +657,11 @@ const chatAction = async (data) => {
     )
     console.log('info', data1);
   }
+
+  if (data.action === "markUnanswered") {
+    const unansweredChat = chatsStore.chats.find(ch => ch.chatId === data.chat.chatId);
+    if (unansweredChat) unansweredChat.showEmptyIndicator = true;
+  }
 };
 
 const messageAction = (data) => {
