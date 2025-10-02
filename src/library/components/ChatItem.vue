@@ -68,7 +68,6 @@
           mode="click"
           menu-side="bottom-right"
           :offset-x="-36"
-          :offset-y="-2"
           :actions="chat.actions"
           @click="clickAction"
           @button-click="BCMclick"
