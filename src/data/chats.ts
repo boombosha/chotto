@@ -15,6 +15,7 @@ export const chats = [
       { action: 'addDialog', title: 'новый диалог', icon: 'https://placehold.jp/30/dd6699/ffffff/64x64.png?text=add' },
       { action: 'edit', title: 'изменить', icon: 'https://placehold.jp/30/dd6699/ffffff/64x64.png?text=pin' },
       { action: 'delete', title: 'удалить', icon: 'https://placehold.jp/30/dd6699/ffffff/64x64.png?text=del' },
+      { action: 'markUnanswered', title: 'Пометить как требующий ответа' },
     ],
     typing: true,
     metadata: '',    // фильтр работает по name и данным в metadata
@@ -231,12 +232,14 @@ export const chats = [
     'lastActivity.timestamp': '1727027359',
     actions: [
       { action: 'edit', title: 'изменить' }, { action: 'unpin', title: 'открепить' },
+      { action: 'markUnanswered', title: 'Пометить как требующий ответа' },
     ],
     metadata: '',
   },
   {
     chatId: 4, name: "Георгий", countUnread: 0, lastMessage: 'test', 'lastActivity.time': 'час назад', statusMessage: 'received', isFixed: false, status: "#00b972", actions: [
       { action: 'edit', title: 'изменить' }, { action: 'delete', title: 'удалить' },
+      { action: 'markUnanswered', title: 'Пометить как требующий ответа' },
     ],
     metadata: '',
   },
@@ -248,6 +251,7 @@ export const chats = [
     'lastMessage.status': 'sent',
     actions: [
       { action: 'edit', title: 'изменить' }, { action: 'delete', title: 'удалить' },
+      { action: 'markUnanswered', title: 'Пометить как требующий ответа' },
     ],
     metadata: '',
   },
@@ -265,6 +269,7 @@ export const chats = [
       { action: 'addDialog', title: 'новый диалог' },
       { action: 'edit', title: 'изменить' },
       { action: 'delete', title: 'удалить' },
+      { action: 'markUnanswered', title: 'Пометить как требующий ответа' },
     ],
     typing: false,
     metadata: '',
@@ -374,6 +379,7 @@ export const chats = [
     'lastMessage.status': 'received',
     actions: [
       { action: 'edit', title: 'изменить' }, { action: 'delete', title: 'удалить' },
+      { action: 'markUnanswered', title: 'Пометить как требующий ответа' },
     ],
     typing: true,
     metadata: '',
@@ -385,6 +391,7 @@ export const chats = [
     'lastActivity.timestamp': '1727021159',
     actions: [
       { action: 'edit', title: 'изменить' }, { action: 'delete', title: 'удалить' },
+      { action: 'markUnanswered', title: 'Пометить как требующий ответа' },
     ],
     metadata: '',
     dialogsExpanded: false,
@@ -423,6 +430,7 @@ export const chats = [
     'lastMessage.status': 'read',
     actions: [
       { action: 'edit', title: 'изменить' }, { action: 'delete', title: 'удалить' },
+      { action: 'markUnanswered', title: 'Пометить как требующий ответа' },
     ],
     metadata: 'Данияр',
   },
@@ -432,6 +440,7 @@ export const chats = [
     'lastActivity.timestamp': '1727021159',
     actions: [
       { action: 'edit', title: 'изменить' }, { action: 'delete', title: 'удалить' },
+      { action: 'markUnanswered', title: 'Пометить как требующий ответа' },
     ],
     metadata: '',
   },
@@ -441,6 +450,7 @@ export const chats = [
     'lastActivity.timestamp': '1727021159',
     actions: [
       { action: 'edit', title: 'изменить' }, { action: 'delete', title: 'удалить' },
+      { action: 'markUnanswered', title: 'Пометить как требующий ответа' },
     ],
     metadata: '',
   },
@@ -450,6 +460,7 @@ export const chats = [
     'lastActivity.timestamp': '1727021159',
     actions: [
       { action: 'edit', title: 'изменить' }, { action: 'delete', title: 'удалить' },
+      { action: 'markUnanswered', title: 'Пометить как требующий ответа' },
     ],
     metadata: '',
   },

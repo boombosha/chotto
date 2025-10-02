@@ -57,10 +57,10 @@
           {{ chat['lastActivity.time'] }}
         </div>
         <div
-          v-if="chat.countUnread > 0"
+          v-if="showChatUnread"
           class="chat-item__unread"
         >
-          {{ chat.countUnread > 99 ? '99+' : chat.countUnread }}
+          {{ chatUnreadText }}
         </div>
 
         <ButtonContextMenu
@@ -244,7 +244,18 @@ const getSortedDialogs = () => {
     })
 }
 
-const status = computed(() => getStatus(props.chat['lastMessage.status']))
+const status = computed(() => getStatus(props.chat['lastMessage.status']));
+
+const showChatUnread = computed(() => {
+  return props.chat.showEmptyIndicator || props.chat.countUnread > 0;
+});
+
+const chatUnreadText = computed(() => {
+  if (props.chat.countUnread > 0) {
+      return props.chat.countUnread > 99 ? '99+' : props.chat.countUnread;
+    }
+    return props.chat.showEmptyIndicator ? '' : undefined;
+});
 
 let timer;
 const typingIndex = ref(0)
