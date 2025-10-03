@@ -56,13 +56,8 @@
         >
           {{ chat['lastActivity.time'] }}
         </div>
-        <div
-          v-if="showChatUnread"
-          class="chat-item__unread"
-        >
-          {{ chatUnreadText }}
-        </div>
 
+        <!-- Кнопка меню размещена выше статуса и индикатора -->
         <ButtonContextMenu
           v-if="buttonMenuVisible && chat.actions"
           mode="click"
@@ -76,10 +71,8 @@
           <span class="pi pi-ellipsis-h chat-item__actions-trigger" />
         </ButtonContextMenu>
 
-        <div
-          v-if="chat.countUnread < 1"
-          class="chat-item__status-chat-container"
-        >
+        <!-- Контейнер для статуса и непрочитанных -->
+        <div class="chat-item__status-unread-container">
           <div
             v-if="statuses.includes(chat['lastMessage.status'])"
             class="chat-item__status-message"
@@ -92,6 +85,18 @@
             <span class="pi pi-check" />
           </div>
 
+          <div
+            v-if="showChatUnread"
+            class="chat-item__unread"
+          >
+            {{ chatUnreadText }}
+          </div>
+        </div>
+
+        <div
+          v-if="chat.countUnread < 1"
+          class="chat-item__status-chat-container"
+        >
           <span
             v-if="(chat.isFixedTop || chat.isFixedBottom)"
             class="chat-item__fixed pi pi-thumbtack"
@@ -429,6 +434,13 @@ const onMouseLeave = (event) => {
     }
   }
 
+  &__status-unread-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: auto;
+  }
+
   &__actions-trigger{
     display: block;
     cursor: pointer;
@@ -463,13 +475,10 @@ const onMouseLeave = (event) => {
   }
 
   &__unread {
-    order: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: var(--chotto-unread-border-radius, 50%);
-    margin-left: auto;
-    margin-top: auto;
     min-width: var(--chotto-unread-min-width, 25px);
     min-height: var(--chotto-unread-min-height, 25px);
     max-height: 20px;
