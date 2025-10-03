@@ -394,16 +394,48 @@ function performScrollToBottom() {
     const element = unref(refFeed);
     if (!element) return;
     
-    // Устанавливаем мгновенный скролл для автоматического скролла при заходе в чат
+    // Устанавливаем мгновенный скролл
     element.style.scrollBehavior = 'auto';
+    
+    // Принудительно устанавливаем скролл до самого низа
     element.scrollTop = element.scrollHeight;
     
-    // Возвращаем плавный скролл через небольшую задержку
+    // Дополнительная проверка через микротаск
+    nextTick(() => {
+      if (element.scrollHeight - element.scrollTop - element.clientHeight > 10) {
+        element.scrollTop = element.scrollHeight;
+      }
+    });
+    
+    // Возвращаем плавный скролл
     setTimeout(() => {
       element.style.scrollBehavior = 'smooth';
     }, 100);
   })
 }
+
+// Гарантированный скролл до низа
+const ensureScrollToBottom = () => {
+  const element = unref(refFeed);
+  if (!element) return;
+  
+  const scrollToBottom = () => {
+    const isAtBottom = element.scrollHeight - element.scrollTop - element.clientHeight < 5;
+    if (!isAtBottom) {
+      element.scrollTop = element.scrollHeight;
+      // Повторная проверка через небольшой интервал
+      setTimeout(() => {
+        const stillNotAtBottom = element.scrollHeight - element.scrollTop - element.clientHeight > 5;
+        if (stillNotAtBottom) {
+          element.scrollTop = element.scrollHeight;
+        }
+      }, 50);
+    }
+  };
+  
+  scrollToBottom();
+  setTimeout(scrollToBottom, 100);
+};
 
 // Первоначальная инициализация скролла
 function initializeScroll() {
@@ -426,8 +458,14 @@ function scrollToBottomForce() {
 watch(
   ()=> props.scrollToBottom,
   () => {
-    if (props.scrollToBottom)
-      performScrollToBottom()
+    console.log('force scroll to bottom')
+    if (props.scrollToBottom) {
+      performScrollToBottom();
+      // Дублирующая проверка
+      setTimeout(() => {
+        ensureScrollToBottom();
+      }, 200);
+    }
   },
   {immediate: true}
 )
@@ -622,6 +660,17 @@ onMounted(() => {
     if (props.objects.length > 0 && !isInitialized.value) {
       initializeScroll();
     }
+    
+    // Наблюдатель за изменениями размера контента
+    const resizeObserver = new ResizeObserver(() => {
+      if (props.scrollToBottom) {
+        ensureScrollToBottom();
+      }
+    });
+    
+    if (refFeed.value) {
+      resizeObserver.observe(refFeed.value);
+    }
   });
 });
 
@@ -642,6 +691,7 @@ onMounted(() => {
   scroll-behavior: auto;
   padding: 10px 30px 10px 30px;
   position: relative;
+  min-height: 0;
   
   &__message {
     position: relative;

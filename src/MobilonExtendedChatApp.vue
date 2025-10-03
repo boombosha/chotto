@@ -858,12 +858,26 @@ const selectChat = (args) => {
   selectedChat.value = args.chat;
   chatsStore.setUnreadCounter(args.chat.chatId, 0);
   messages.value = getFeedObjects(); // Обновляем сообщения при выборе чата
-  setTimeout(() => {
-    scrollToBottomOnSelectChat.value = false
-    inputFocus.value = false
-    // Сбрасываем флаг через небольшую задержку
-    isNewDialog.value = false
-  }, 50)
+  
+  nextTick(() => {
+    // Время на рендеринг сообщений
+    setTimeout(() => {
+      scrollToBottomOnSelectChat.value = false;
+      inputFocus.value = false;
+      isNewDialog.value = false;
+      
+      // Дополнительная проверка скролла
+      setTimeout(() => {
+        const feedElement = document.querySelector('.message-feed');
+        if (feedElement) {
+          const isAtBottom = feedElement.scrollHeight - feedElement.scrollTop - feedElement.clientHeight < 10;
+          if (!isAtBottom) {
+            feedElement.scrollTop = feedElement.scrollHeight;
+          }
+        }
+      }, 100);
+    }, 100);
+  })
 };
 
 const handleClickReplied = (messageId) => {
