@@ -100,7 +100,7 @@
   setup
   lang="ts"
 >
-import { ref, unref, watch, nextTick, inject, computed } from 'vue';
+import { ref, unref, watch, nextTick, inject, computed, onMounted } from 'vue';
 import {
   FileMessage,
   ImageMessage,
@@ -126,17 +126,18 @@ import FeedKeyboard from './FeedKeyboard.vue';
 const trackingObjects = ref();
 const refFeed = ref();
 const keyboardRef = ref();
-const isShowButton = ref(false)
-const isKeyboardPlace = ref(false)
-const allowLoadMoreTop = ref(false)
-const allowLoadMoreBottom = ref(false)
-const movingDown = ref(false)
-const isScrollByMouseButton = ref(false)
-const showStickyDate = ref(false)
-const stickyDateText = ref('')
-let stickyHideTimer = null as unknown as number | null
-const newMessagesCount = ref(0)
-const previousObjectsLength = ref(0)
+const isShowButton = ref(false);
+const isKeyboardPlace = ref(false);
+const allowLoadMoreTop = ref(false);
+const allowLoadMoreBottom = ref(false);
+const movingDown = ref(false);
+const isScrollByMouseButton = ref(false);
+const showStickyDate = ref(false);
+const stickyDateText = ref('');
+let stickyHideTimer = null as unknown as number | null;
+const newMessagesCount = ref(0);
+const previousObjectsLength = ref(0);
+const isInitialized = ref(false);
 
 const props = defineProps({
   objects: {
@@ -390,6 +391,8 @@ const componentsMap = (type) => {
 function performScrollToBottom() {
   nextTick(function () {
     const element = unref(refFeed);
+    if (!element) return;
+    
     // Устанавливаем мгновенный скролл для автоматического скролла при заходе в чат
     element.style.scrollBehavior = 'auto';
     element.scrollTop = element.scrollHeight;
@@ -399,6 +402,14 @@ function performScrollToBottom() {
       element.style.scrollBehavior = 'smooth';
     }, 100);
   })
+}
+
+// Первоначальная инициализация скролла
+function initializeScroll() {
+  if (!isInitialized.value && props.objects.length > 0) {
+    performScrollToBottom();
+    isInitialized.value = true;
+  }
 }
 
 function scrollToBottomForce() {
@@ -478,7 +489,11 @@ watch(
   () => props.objects,
   (newObjects, oldObjects) => {
     nextTick(() => {
-      
+      // Инициализируем скролл при первой загрузке объектов
+      if (!isInitialized.value && newObjects.length > 0) {
+        initializeScroll();
+      }
+
       if (oldObjects && newObjects.length > oldObjects.length) {
         const addedCount = newObjects.length - oldObjects.length;
         
@@ -524,17 +539,15 @@ watch(
       trackingObjects.value = document.querySelectorAll('.tracking-message')
       trackingObjects.value.forEach((obj) => observer.observe(obj))
       
+      // Автоматический скролл вниз при новых сообщениях (только если уже находимся внизу)
       if (props.scrollToBottom) {
         const element = unref(refFeed);
         if (element) {
-          // Устанавливаем мгновенный скролл для автоматического скролла при обновлении сообщений
-          element.style.scrollBehavior = 'auto';
-          element.scrollTop = element.scrollHeight;
-          
-          setTimeout(() => {
+          const isNearBottom = element.scrollHeight - element.scrollTop - element.clientHeight < 100;
+          if (isNearBottom) {
             element.style.scrollBehavior = 'auto';
             element.scrollTop = element.scrollHeight;
-          }, 500);
+          }
         }
       }
     })
@@ -619,6 +632,15 @@ function updateStickyDate() {
     // ignore
   }
 }
+
+// watcher для инициализации при монтировании
+onMounted(() => {
+  nextTick(() => {
+    if (props.objects.length > 0 && !isInitialized.value) {
+      initializeScroll();
+    }
+  });
+});
 
 </script>
 
