@@ -438,7 +438,10 @@ const onMouseLeave = (event) => {
     display: flex;
     align-items: center;
     gap: 4px;
-    margin-top: auto;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0;
   }
 
   &__actions-trigger{
@@ -493,6 +496,10 @@ const onMouseLeave = (event) => {
     font-size: var(--chotto-additional-text-font-size);
     color: var(--chotto-secondary-text-color);
     white-space: nowrap;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
   }
 
   &__context-menu {
