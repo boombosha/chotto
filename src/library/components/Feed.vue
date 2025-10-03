@@ -225,6 +225,7 @@ const feedKeyboardAction = (action) => {
 
 function scrollTopCheck (allowLoadMore: boolean = true) {
   const element = unref(refFeed);
+
   let keyboardHeight = 0
   if (keyboardRef.value){
     keyboardHeight = keyboardRef.value.refKeyboard.clientHeight
@@ -425,7 +426,6 @@ function scrollToBottomForce() {
 watch(
   ()=> props.scrollToBottom,
   () => {
-    console.log('force scroll to bottom')
     if (props.scrollToBottom)
       performScrollToBottom()
   },
@@ -529,27 +529,10 @@ watch(
       allowLoadMoreTop.value = true
       allowLoadMoreBottom.value = true
       scrollTopCheck(false)
-      if (isScrollByMouseButton.value){
-        const element = unref(refFeed);
-        if (movingDown.value)
-          element.scrollTop = element.scrollHeight - 400
-        if (!movingDown.value)
-          element.scrollTop = 400
-      }
+
       trackingObjects.value = document.querySelectorAll('.tracking-message')
       trackingObjects.value.forEach((obj) => observer.observe(obj))
       
-      // Автоматический скролл вниз при новых сообщениях (только если уже находимся внизу)
-      if (props.scrollToBottom) {
-        const element = unref(refFeed);
-        if (element) {
-          const isNearBottom = element.scrollHeight - element.scrollTop - element.clientHeight < 100;
-          if (isNearBottom) {
-            element.style.scrollBehavior = 'auto';
-            element.scrollTop = element.scrollHeight;
-          }
-        }
-      }
     })
   },
   { immediate: true })
