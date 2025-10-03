@@ -58,6 +58,17 @@ const props = defineProps({
     required: false,
     default: 'top'
   },
+  // Новые props для корректировки позиции
+  offsetX: {
+    type: Number,
+    default: 0,
+    required: false,
+  },
+  offsetY: {
+    type: Number,
+    default: 0,
+    required: false,
+  },
 });
 
 const buttonContextMenuId = useId()
@@ -127,16 +138,25 @@ const updatePosition = () => {
     const cmBounds = contextMenu.value.getBoundingClientRect()
     t.style.display = 'none'
     nextTick(() => {
-      const r = {
-        'left'  : {top: bounds.top - ((cmBounds.height - bounds.height) / 2) - cmBounds.top, left: bounds.left - cmBounds.width - cmBounds.left},
-        'right' : {top: bounds.top - ((cmBounds.height - bounds.height) / 2) - cmBounds.top, left: bounds.left + bounds.width - cmBounds.left},
-        'bottom': {top: bounds?.bottom - cmBounds.top, left: bounds?.left - ((cmBounds.width - bounds.width) / 2) - cmBounds.left},
-        'top'   : {top: bounds.top - cmBounds.height - cmBounds.top, left: bounds?.left - ((cmBounds.width - bounds.width) / 2) - cmBounds.left},
+      const basePositions = {
+        'left'  : {top: bounds.top - ((cmBounds.height - bounds.height) / 2), left: bounds.left - cmBounds.width},
+        'right' : {top: bounds.top - ((cmBounds.height - bounds.height) / 2), left: bounds.left + bounds.width},
+        'bottom': {top: bounds.bottom, left: bounds.left - ((cmBounds.width - bounds.width) / 2)},
+        'bottom-right': {top: bounds.bottom, left: bounds.left + bounds.width},
+        'top'   : {top: bounds.top - cmBounds.height, left: bounds.left - ((cmBounds.width - bounds.width) / 2)},
         'top-right': { top: bounds.top - cmBounds.height, left: bounds.right - (cmBounds.width / 2) }
       }
-      //console.log(bounds, cmBounds, 'top: ', r[props.menuSide].top + 'px', ' left: ', r[props.menuSide].left + 'px')
-      t.style.top = r[props.menuSide].top + 'px'
-      t.style.left = r[props.menuSide].left + 'px'
+      
+      const basePosition = basePositions[props.menuSide] || basePositions.top
+      
+      // Корректировки offsetX и offsetY
+      const adjustedPosition = {
+        top: basePosition.top + props.offsetY,
+        left: basePosition.left + props.offsetX
+      }
+      
+      t.style.top = adjustedPosition.top + 'px'
+      t.style.left = adjustedPosition.left + 'px'
       t.style.opacity = '1'
       t.style.display = 'inherit'
       isOpened.value = true
