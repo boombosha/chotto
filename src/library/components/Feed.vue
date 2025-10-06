@@ -142,6 +142,7 @@ const isInitialized = ref(false);
 const prevScrollHeight = ref(0);
 const prevScrollTop = ref(0);
 const pendingTopRestore = ref(false);
+const topLoadJustHappened = ref(false);
 
 const props = defineProps({
   objects: {
@@ -246,9 +247,8 @@ function scrollTopCheck (allowLoadMore: boolean = true) {
   }
 
   if (isScrollByMouseButton.value){
-    if (element.scrollTop < 300){      
-      movingDown.value = false
-      allowLoadMoreTop.value = false
+    if (element.scrollTop < 300 && !props.isLoadingMore) {
+      emit('loadMore');
     }
     if (scrollBottom < 300){
       allowLoadMoreBottom.value = false
@@ -304,12 +304,14 @@ watch(
               const prevBehavior = (feedEl.style as any).scrollBehavior
               feedEl.style.scrollBehavior = 'auto'
               const delta = feedEl.scrollHeight - prevScrollHeight.value
-              // small lift to keep newly prepended items slightly above top edge
-              feedEl.scrollTop = prevScrollTop.value + delta - 10
-              setTimeout(() => { feedEl.style.scrollBehavior = prevBehavior || 'smooth' }, 50)
+              // keep exact position without drift
+              feedEl.scrollTop = prevScrollTop.value + delta
+              setTimeout(() => { feedEl.style.scrollBehavior = prevBehavior || 'auto' }, 50)
             }
           } finally {
             pendingTopRestore.value = false
+            topLoadJustHappened.value = true
+            setTimeout(() => { topLoadJustHappened.value = false }, 500)
           }
         }, 0)
       })
@@ -343,6 +345,9 @@ watch(
                   msg.classList.add('new-message');
                 });
                 
+                if (topLoadJustHappened.value) {
+                  return;
+                }
                 firstMessages.forEach((msg, index) => {
                   setTimeout(() => {
                     msg.classList.add('animate');
@@ -362,6 +367,9 @@ watch(
             
             
             if (newMessages.length > 0) {
+              if (topLoadJustHappened.value) {
+                return;
+              }
               newMessages.forEach((msg, index) => {
                 setTimeout(() => {
                   msg.classList.add('animate');
@@ -538,6 +546,11 @@ const callback = (entries: Array<IntersectionObserverEntry>) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
       emit('messageVisible', JSON.parse(entry.target.id))
+      // Плавно показываем новые (подгруженные) сообщения, когда они попадают в видимую область
+      const el = entry.target as HTMLElement
+      if (el.classList && el.classList.contains('new-message')) {
+        el.classList.add('animate')
+      }
     }
   })
 }
@@ -593,11 +606,8 @@ watch(
       
       allowLoadMoreTop.value = true
       allowLoadMoreBottom.value = true
-      // После обновления объектов сразу выполняем проверку с разрешённой
-      // индикацией подгрузки, чтобы при нахождении у верха ленты
-      // повторная подгрузка могла сработать без необходимости
-      // искусственно прокручивать вниз, а затем вверх
-      scrollTopCheck(true)
+      // Проверяем позицию без авто-триггера подгрузки, чтобы избежать цепной загрузки
+      scrollTopCheck(false)
 
       trackingObjects.value = document.querySelectorAll('.tracking-message')
       trackingObjects.value.forEach((obj) => observer.observe(obj))
