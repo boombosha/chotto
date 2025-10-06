@@ -36,7 +36,7 @@
     >
       <!-- Пустое состояние -->
       <div 
-        v-if="getSortedAndFilteredChats().length === 0"
+        v-if="getFilteredChats().length === 0"
         class="chat-list__no-data"
       >
         <div class="chat-list__placeholder">
@@ -53,7 +53,7 @@
       <template v-else>
         <div class="chat-list__fixed-items-top">
           <ChatItem
-            v-for="chat in getSortedAndFilteredChats().filter(c => c.isFixedTop)"
+            v-for="chat in getFilteredChats().filter(c => c.isFixedTop)"
             :key="chat.chatId"
             class="chat-list__item"
             :chat="chat"
@@ -67,7 +67,7 @@
 
         <div class="chat-list__scrollable-items">
           <ChatItem
-            v-for="chat in getSortedAndFilteredChats().filter(c => !c.isFixedBottom && !c.isFixedTop)"
+            v-for="chat in getFilteredChats().filter(c => !c.isFixedBottom && !c.isFixedTop)"
             :key="chat.chatId"
             class="chat-list__item"
             :chat="chat"
@@ -81,7 +81,7 @@
 
         <div class="chat-list__fixed-items-bottom">
           <ChatItem
-            v-for="chat in getSortedAndFilteredChats().filter(c => c.isFixedBottom)"
+            v-for="chat in getFilteredChats().filter(c => c.isFixedBottom)"
             :key="chat.chatId"
             class="chat-list__item"
             :chat="chat"
@@ -273,26 +273,15 @@ const selectDialog = (dialog) => {
   });
 }
 
-const getSortedAndFilteredChats = () => {
-  return props.chats
-    .toSorted((a, b) => {
-      if (Number(a['lastActivity.timestamp']) > Number(b['lastActivity.timestamp'])) return -1;
-      if (Number(a['lastActivity.timestamp']) < Number(b['lastActivity.timestamp'])) return 1;
-      if (Number(a['lastActivity.timestamp']) == Number(b['lastActivity.timestamp'])) return 0;
-    })
-    .toSorted((a, b) => {   // immutable sort
-      if (a.countUnread > b.countUnread) return -1;
-      if (a.countUnread < b.countUnread) return 1;
-      if (a.countUnread == b.countUnread) return 0;
-    })
-    .filter(c => {
-      if (!props.filterQuery)
-        return c.name.includes(filter.value) ||
-          c.metadata.includes(filter.value);
-      else 
-        return c.name.includes(props.filterQuery) ||
-          c.metadata.includes(props.filterQuery);
-    });
+const getFilteredChats = () => {
+  return props.chats.filter(c => {
+    if (!props.filterQuery)
+      return c.name.includes(filter.value) ||
+        c.metadata.includes(filter.value);
+    else 
+      return c.name.includes(props.filterQuery) ||
+        c.metadata.includes(props.filterQuery);
+  });
 }
 
 const getFilter = (value) => {

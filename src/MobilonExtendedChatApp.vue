@@ -23,7 +23,7 @@
           <ChatList
             v-if="!isOpenSearchPanel || (isOpenSearchPanel && feedSearchFeedCol)"
             ref="refChatList"
-            :chats="chatsStore.chats"
+            :chats="sortedAndFilteredChats"
             filter-enabled
             :title-enabled="true"
             :dialog-tabs="dialogTabs"
@@ -272,8 +272,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed, unref, toRaw } from "vue";
-// import { nextTick } from "vue";
+import { onMounted, ref, computed, unref, toRaw, nextTick } from "vue";
 import moment from 'moment';
 import ContactCRMIcon from "./library/icons/ContactCRMIcon.vue";
 
@@ -509,6 +508,21 @@ const channelTooltips = ref({
 
 const refContainer = ref()
 const refChatWrapper = ref()
+
+// Computed свойство для сортировки и фильтрации чатов
+const sortedAndFilteredChats = computed(() => {
+  return chatsStore.chats
+    .toSorted((a, b) => {
+      if (Number(a['lastActivity.timestamp']) > Number(b['lastActivity.timestamp'])) return -1;
+      if (Number(a['lastActivity.timestamp']) < Number(b['lastActivity.timestamp'])) return 1;
+      if (Number(a['lastActivity.timestamp']) == Number(b['lastActivity.timestamp'])) return 0;
+    })
+    .toSorted((a, b) => {   // immutable sort
+      if (a.countUnread > b.countUnread) return -1;
+      if (a.countUnread < b.countUnread) return 1;
+      if (a.countUnread == b.countUnread) return 0;
+    });
+});
 
 const recentAttributeChannels = computed(() => {
   const dialogs = selectedChat.value?.dialogs || [];
