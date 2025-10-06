@@ -138,6 +138,10 @@ let stickyHideTimer = null as unknown as number | null;
 const newMessagesCount = ref(0);
 const previousObjectsLength = ref(0);
 const isInitialized = ref(false);
+// Preserve scroll position on top-prepend via scrollHeight delta
+const prevScrollHeight = ref(0);
+const prevScrollTop = ref(0);
+const pendingTopRestore = ref(false);
 
 const props = defineProps({
   objects: {
@@ -253,6 +257,10 @@ function scrollTopCheck (allowLoadMore: boolean = true) {
   }
   else if (allowLoadMore){
     if (element.scrollTop < 300) {
+      // remember current scroll metrics before top-prepend
+      prevScrollHeight.value = element.scrollHeight
+      prevScrollTop.value = element.scrollTop
+      pendingTopRestore.value = true
       allowLoadMoreTop.value = false
     }
     if (scrollBottom < 300){
@@ -286,7 +294,26 @@ watch(
     }
     
     if (oldValue === true && newValue === false) {
-      
+      // Restore scroll position after top-prepend based on content height delta
+      nextTick(() => {
+        // defer to ensure DOM measured after v-for renders
+        setTimeout(() => {
+          try {
+            const feedEl = unref(refFeed) as HTMLElement
+            if (pendingTopRestore.value && feedEl) {
+              const prevBehavior = (feedEl.style as any).scrollBehavior
+              feedEl.style.scrollBehavior = 'auto'
+              const delta = feedEl.scrollHeight - prevScrollHeight.value
+              // small lift to keep newly prepended items slightly above top edge
+              feedEl.scrollTop = prevScrollTop.value + delta - 10
+              setTimeout(() => { feedEl.style.scrollBehavior = prevBehavior || 'smooth' }, 50)
+            }
+          } finally {
+            pendingTopRestore.value = false
+          }
+        }, 0)
+      })
+
       nextTick(() => {
 
         const currentObjects = props.objects;
@@ -566,7 +593,11 @@ watch(
       
       allowLoadMoreTop.value = true
       allowLoadMoreBottom.value = true
-      scrollTopCheck(false)
+      // После обновления объектов сразу выполняем проверку с разрешённой
+      // индикацией подгрузки, чтобы при нахождении у верха ленты
+      // повторная подгрузка могла сработать без необходимости
+      // искусственно прокручивать вниз, а затем вверх
+      scrollTopCheck(true)
 
       trackingObjects.value = document.querySelectorAll('.tracking-message')
       trackingObjects.value.forEach((obj) => observer.observe(obj))
@@ -790,5 +821,4 @@ onMounted(() => {
   transform: translateY(0) !important;
   pointer-events: auto;
 }
-
 </style>
