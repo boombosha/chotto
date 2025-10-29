@@ -7,7 +7,7 @@
         v-if="titleEnabled"
         class="chat-list__title"
       >
-        {{ t('component.ChatList.Title') }}
+        {{ props.title }}
       </h2>
 
       <slot name="actions" />
@@ -110,7 +110,6 @@
 import { ref, unref, watch, nextTick } from 'vue';
 import { ChatItem, ChatFilter } from "./";
 // import { ContextMenu } from "./";
-import { t } from '../../locale/useLocale';
 import ChatTabs from '@/library/components/ChatTabs.vue';
 
 // Define props
@@ -126,6 +125,10 @@ const props = defineProps({
   titleEnabled: {
     type: Boolean,
     default: true,
+  },
+  title: {
+    type: String,
+    default: 'Чаты',
   },
   filterQuery: {
     type: String,

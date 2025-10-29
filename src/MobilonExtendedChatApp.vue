@@ -27,6 +27,7 @@
             filter-enabled
             :title-enabled="true"
             :dialog-tabs="dialogTabs"
+            :title="'Mobilon One'"
             @select="selectChat"
             @expand="expandChat"
             @action="chatAction"
