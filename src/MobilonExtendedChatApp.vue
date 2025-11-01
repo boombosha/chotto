@@ -10,6 +10,7 @@
           <SideBar
             :sidebar-items="sidebarItems"
             :menu-actions="menuActions"
+            :show-settings="true"
             @select-item="selectItem"
           />
           <ThemeMode
