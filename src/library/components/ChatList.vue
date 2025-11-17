@@ -369,6 +369,7 @@ const handleTabClick = (tabId) => {
     align-items: center;
     column-gap: 50px;
     padding: var(--chotto-chat-list-title-container-padding);
+    max-height: 60px;
   }
 
   &__context-menu {

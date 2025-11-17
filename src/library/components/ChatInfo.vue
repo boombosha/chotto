@@ -109,6 +109,7 @@ const chatDescription = computed(() => {
     padding: var(--chotto-chat-info-padding);
     border-bottom: var(--chotto-chat-info-border-bottom, 1px solid var(--chotto-item-border-color));
     background-color: var(--chotto-chat-info-background-color);
+    max-height: 60px;
   }
 
   &__base-line{
