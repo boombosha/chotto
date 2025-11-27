@@ -34,9 +34,13 @@
       @mousedown="startScrollWatch"
       @mouseup="stopScrollWatch"
     >
+      <LoadingIndicator
+        class="chat-list__loading-indicator"
+        :is-loading="props.isLoading"
+      />
       <!-- Пустое состояние -->
       <div 
-        v-if="getFilteredChats().length === 0"
+        v-if="!props.isLoading && getFilteredChats().length === 0"
         class="chat-list__no-data"
       >
         <div class="chat-list__placeholder">
@@ -111,6 +115,7 @@ import { ref, unref, watch, nextTick } from 'vue';
 import { ChatItem, ChatFilter } from "./";
 // import { ContextMenu } from "./";
 import ChatTabs from '@/library/components/ChatTabs.vue';
+import LoadingIndicator from '@/library/components/LoadingIndicator.vue';
 
 // Define props
 const props = defineProps({
@@ -141,6 +146,10 @@ const props = defineProps({
   showDialogs: {
     type: Boolean,
     default: true,
+  },
+  isLoading: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -322,6 +331,7 @@ const handleTabClick = (tabId) => {
     overflow-y: auto;
     overflow-x: hidden;
     padding: var(--chotto-chat-list-items-padding);
+    position: relative;
 
     &::-webkit-scrollbar {
       width: 6px;
@@ -336,6 +346,10 @@ const handleTabClick = (tabId) => {
     &::-webkit-scrollbar-track {
       border-radius: 10px;
     }
+  }
+
+  &__loading-indicator {
+    pointer-events: none;
   }
 
   &__fixed-items-top,
