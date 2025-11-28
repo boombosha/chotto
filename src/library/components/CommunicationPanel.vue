@@ -257,7 +257,7 @@ const defaultChannelTooltipTimer = ref(null);
 const channelTooltipRef = ref(null);
 
 // Constants
-const CHANNEL_TYPES = ['phone', 'whatsapp', 'telegram', 'max', 'sms'];
+const CHANNEL_TYPES = ['whatsapp', 'telegram', 'max', 'sms', 'phone'];
 
 const channelIconsMap = {
   phone: CommunicationPanelPhoneIcon,
