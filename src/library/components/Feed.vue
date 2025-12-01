@@ -16,6 +16,12 @@
       />
     </transition>
     
+    <!-- Спейсер для прижатия сообщений к низу при малом количестве -->
+    <div 
+      v-if="hasFewMessages"
+      class="message-feed__spacer"
+    />
+    
     <div
       v-for="(object, index) in groupedObjects"
       :id="JSON.stringify(object)"
@@ -143,6 +149,10 @@ const prevScrollHeight = ref(0);
 const prevScrollTop = ref(0);
 const pendingTopRestore = ref(false);
 const topLoadJustHappened = ref(false);
+const hasFewMessages = ref(false);
+const throttledCheckIfFewMessages = throttle(() => {
+  checkIfFewMessages();
+}, 150);
 
 const props = defineProps({
   objects: {
@@ -301,7 +311,7 @@ watch(
           try {
             const feedEl = unref(refFeed) as HTMLElement
             if (pendingTopRestore.value && feedEl) {
-              const prevBehavior = (feedEl.style as any).scrollBehavior
+              const prevBehavior = feedEl.style.scrollBehavior
               feedEl.style.scrollBehavior = 'auto'
               const delta = feedEl.scrollHeight - prevScrollHeight.value
               // keep exact position without drift
@@ -425,84 +435,53 @@ const componentsMap = (type) => {
 }
 
 function performScrollToBottom() {
-  nextTick(function () {
+  nextTick(() => {
     const element = unref(refFeed);
     if (!element) return;
-    
-    // Устанавливаем мгновенный скролл
-    element.style.scrollBehavior = 'auto';
-    
-    // Принудительно устанавливаем скролл до самого низа
     element.scrollTop = element.scrollHeight;
-    
-    // Дополнительная проверка через микротаск
-    nextTick(() => {
-      if (element.scrollHeight - element.scrollTop - element.clientHeight > 10) {
-        element.scrollTop = element.scrollHeight;
-      }
-    });
-    
-    // Возвращаем плавный скролл
-    setTimeout(() => {
-      element.style.scrollBehavior = 'smooth';
-    }, 100);
-  })
+  });
 }
 
-// Гарантированный скролл до низа
-const ensureScrollToBottom = () => {
+function ensureScrollToBottom() {
   const element = unref(refFeed);
   if (!element) return;
-  
-  const scrollToBottom = () => {
-    const isAtBottom = element.scrollHeight - element.scrollTop - element.clientHeight < 5;
-    if (!isAtBottom) {
-      element.scrollTop = element.scrollHeight;
-      // Повторная проверка через небольшой интервал
-      setTimeout(() => {
-        const stillNotAtBottom = element.scrollHeight - element.scrollTop - element.clientHeight > 5;
-        if (stillNotAtBottom) {
-          element.scrollTop = element.scrollHeight;
-        }
-      }, 50);
-    }
-  };
-  
-  scrollToBottom();
-  setTimeout(scrollToBottom, 100);
-};
+  const scrollBottom = element.scrollHeight - element.scrollTop - element.clientHeight;
+  // Если мы не внизу (есть отступ больше 5px), скроллим вниз
+  if (scrollBottom > 5) {
+    element.scrollTop = element.scrollHeight;
+  }
+}
+
+function smoothScrollToBottom() {
+  nextTick(() => {
+    const element = unref(refFeed);
+    if (!element) return;
+    element.style.scrollBehavior = 'smooth';
+    element.scrollTop = element.scrollHeight;
+  });
+}
 
 // Первоначальная инициализация скролла
 function initializeScroll() {
   if (!isInitialized.value && props.objects.length > 0) {
-    performScrollToBottom();
     isInitialized.value = true;
+    performScrollToBottom();
   }
 }
 
 function scrollToBottomForce() {
   emit('forceScrollToBottom')
   // Для кнопки "вниз" используем плавный скролл
-  nextTick(function () {
-    const element = unref(refFeed);
-    element.style.scrollBehavior = 'smooth';
-    element.scrollTop = element.scrollHeight;
-  })
+  smoothScrollToBottom();
 }
 
 watch(
   ()=> props.scrollToBottom,
   () => {
-    console.log('force scroll to bottom')
     if (props.scrollToBottom) {
       performScrollToBottom();
-      // Дублирующая проверка
-      setTimeout(() => {
-        ensureScrollToBottom();
-      }, 200);
     }
-  },
-  {immediate: true}
+  }
 )
 
 const messageAction = (message) => {
@@ -575,33 +554,36 @@ watch(
       if (oldObjects && newObjects.length > oldObjects.length) {
         const addedCount = newObjects.length - oldObjects.length;
         
-        setTimeout(() => {
-
-          if (props.isLoadingMore) {
-            newMessagesCount.value = addedCount;
-            previousObjectsLength.value = oldObjects.length;
+        if (props.isLoadingMore) {
+          // Загрузка старых сообщений сверху
+          newMessagesCount.value = addedCount;
+          previousObjectsLength.value = oldObjects.length;
+          
+          nextTick(() => {
+            const newMessages = document.querySelectorAll('.tracking-message.new-message');
+            newMessages.forEach((msg, index) => {
+              setTimeout(() => {
+                msg.classList.add('animate');
+              }, index * 150);
+            });
             
             setTimeout(() => {
-              const newMessages = document.querySelectorAll('.tracking-message.new-message');
-              console.log('📱 Найдено новых сообщений для анимации:', newMessages.length);
-              
-              newMessages.forEach((msg, index) => {
-                setTimeout(() => {
-                  msg.classList.add('animate');
-                  console.log(`✨ Анимация запущена для сообщения ${index + 1}`);
-                }, index * 150);
+              newMessages.forEach((msg) => {
+                msg.classList.remove('new-message', 'animate');
               });
-              
-              setTimeout(() => {
-                newMessages.forEach((msg) => {
-                  msg.classList.remove('new-message', 'animate');
-                });
-                newMessagesCount.value = 0;
-                
-              }, addedCount * 150 + 1500);
-            }, 50); 
+              newMessagesCount.value = 0;
+            }, addedCount * 150 + 1500);
+          });
+        } else {
+          // Новое сообщение добавлено в конец
+          const feedEl = unref(refFeed) as HTMLElement
+          if (feedEl) {
+            const wasAtBottom = feedEl.scrollHeight - feedEl.scrollTop - feedEl.clientHeight < 50
+            if (wasAtBottom || hasFewMessages.value) {
+              performScrollToBottom()
+            }
           }
-        }, 10); 
+        }
       }
       
       allowLoadMoreTop.value = true
@@ -611,6 +593,10 @@ watch(
 
       trackingObjects.value = document.querySelectorAll('.tracking-message')
       trackingObjects.value.forEach((obj) => observer.observe(obj))
+      
+      nextTick(() => {
+        throttledCheckIfFewMessages()
+      })
       
     })
   },
@@ -695,6 +681,21 @@ function updateStickyDate() {
   }
 }
 
+function checkIfFewMessages() {
+  const feedEl = unref(refFeed) as HTMLElement
+  if (!feedEl) return
+  
+  // Проверяем, меньше ли высота контента высоты видимой области
+  // Если контент не переполняет контейнер, значит сообщений мало
+  const hasScroll = feedEl.scrollHeight > feedEl.clientHeight
+  const newValue = !hasScroll && props.objects.length > 0
+  
+  // Обновляем только если значение изменилось, чтобы избежать лишних перерисовок
+  if (hasFewMessages.value !== newValue) {
+    hasFewMessages.value = newValue
+  }
+}
+
 // watcher для инициализации при монтировании
 onMounted(() => {
   nextTick(() => {
@@ -704,8 +705,17 @@ onMounted(() => {
     
     // Наблюдатель за изменениями размера контента
     const resizeObserver = new ResizeObserver(() => {
+      throttledCheckIfFewMessages();
       if (props.scrollToBottom) {
-        ensureScrollToBottom();
+        // При изменении размера контента принудительно скроллим вниз
+        performScrollToBottom();
+        setTimeout(() => {
+          ensureScrollToBottom();
+        }, 200);
+        // Дополнительная проверка для медленных чатов
+        setTimeout(() => {
+          ensureScrollToBottom();
+        }, 800);
       }
     });
     
@@ -733,6 +743,11 @@ onMounted(() => {
   padding: 10px 30px 10px 30px;
   position: relative;
   min-height: 0;
+  
+  &__spacer {
+    flex: 1;
+    min-height: 0;
+  }
   
   &__message {
     position: relative;

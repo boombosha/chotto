@@ -998,6 +998,22 @@ Open source * Linux * Настройка Linux * Управление разра
     avatar:'https://placehold.jp/30/336633/ffffff/64x64.png?text=VIK',
   },
 
+
+  {
+    chatId: 7,
+    dialogId: 'dlg_6_new',
+    messageId: '609',
+    type: "message.text",
+    text: "Там ещё в заголовке проблема",
+    subText: 'Максим',
+    avatar:'https://placehold.jp/30/FFCF40/ffffff/64x64.png?text=Max',
+    direction: 'outgoing',
+    status: 'received',
+    timestamp: '1757065503',
+    backgroundColor: '#B3E5FC',
+    header: 'Максим'
+  },
+
   /**============================================================================================================ */
   { messageId: 1,
     chatId: 5, type: "message.text", 
