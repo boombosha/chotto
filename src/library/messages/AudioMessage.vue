@@ -70,6 +70,10 @@
           :min="0" 
           :max="audioDuration" 
           step="0.1"
+          @mousedown="isSeeking = true"
+          @mouseup="handleSeekEnd"
+          @touchstart="isSeeking = true"
+          @touchend="handleSeekEnd"
         >
         <div class="audio-message__player-controls">
           <p class="audio-message__remaining-time">
@@ -279,7 +283,8 @@ const emit = defineEmits(['action','reply']);
 const player = ref<HTMLAudioElement | null>();
 const isPlaying = ref(false);
 const audioDuration = ref(0);
-const currentTime = ref(0)
+const currentTime = ref(0);
+const isSeeking = ref(false); // Флаг для предотвращения циклических обновлений
 
 // Computed property for channel info from tooltip data
 const channelInfo = computed(() => {
@@ -353,7 +358,7 @@ const formatCurrentTime = computed(() => {
 watch(
   () => currentTime.value,
   () => {
-    if (player.value) {
+    if (player.value && isSeeking.value) {
       if (player.value.duration != Infinity && !Number.isNaN(player.value.duration))
         player.value.currentTime = currentTime.value;
 
@@ -362,6 +367,15 @@ watch(
     }
   }
 )
+
+const handleSeekEnd = () => {
+  if (player.value && isSeeking.value) {
+    // Устанавливаем финальное время при завершении перетаскивания
+    if (player.value.duration != Infinity && !Number.isNaN(player.value.duration))
+      player.value.currentTime = currentTime.value;
+  }
+  isSeeking.value = false;
+}
 
 const formatDuration = computed(() => {
   if (player.value) {
@@ -391,7 +405,10 @@ onMounted(() => {
       audioDuration.value = player.value != null ? player.value.duration : 0;
     });
     player.value.addEventListener('timeupdate', () => {
-      currentTime.value = player.value != null ? player.value.currentTime : 0;
+      // Обновляем currentTime только если пользователь не перетаскивает слайдер
+      if (!isSeeking.value && player.value != null) {
+        currentTime.value = player.value.currentTime;
+      }
     });
   }
 });
