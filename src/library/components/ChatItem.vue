@@ -350,6 +350,17 @@ const onMouseLeave = (event) => {
     else 
       buttonMenuVisible.value = false
   }
+  
+  // Закрываем контекстное меню при уходе мыши с элемента (если мышь не перешла на меню)
+  if (props.contextMenuTrigger === 'rightClick' && contextMenuVisible.value) {
+    const target = event.relatedTarget as HTMLElement
+    const contextMenu = document.getElementById('context-menu-rightclick-' + contextMenuId)
+    
+    // Закрываем меню, если мышь ушла с элемента и не перешла на меню
+    if (!contextMenu || !contextMenu.contains(target)) {
+      hideContextMenu()
+    }
+  }
 }
 
 const onRightClick = (event: MouseEvent) => {
@@ -418,7 +429,10 @@ const onContextMenuMouseEnter = () => {
 }
 
 const onContextMenuMouseLeave = () => {
-  // Можно закрыть меню при уходе мыши, или оставить открытым до клика
+  // Закрываем меню при уходе мыши с меню
+  if (props.contextMenuTrigger === 'rightClick') {
+    hideContextMenu()
+  }
 }
 
 const containerRef = ref<HTMLElement | null>(null)
@@ -437,9 +451,17 @@ const handleClickOutside = (event: MouseEvent) => {
   }
 }
 
+const handleScroll = () => {
+  // Закрываем меню при скролле
+  if (props.contextMenuTrigger === 'rightClick' && contextMenuVisible.value) {
+    hideContextMenu()
+  }
+}
+
 onMounted(() => {
   if (props.contextMenuTrigger === 'rightClick') {
     document.addEventListener('click', handleClickOutside)
+    window.addEventListener('scroll', handleScroll, true)
     // Инициализируем меню как скрытое
     nextTick(() => {
       const contextMenu = document.getElementById('context-menu-rightclick-' + contextMenuId)
@@ -453,6 +475,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
+  window.removeEventListener('scroll', handleScroll, true)
 })
 
 </script>
