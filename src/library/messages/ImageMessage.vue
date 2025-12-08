@@ -30,7 +30,10 @@
       </Tooltip>
     </p>
 
-    <div class="image-message__content" :class="{ 'is-first': isFirstInSeries, 'with-avatar-indent': !isFirstInSeries && message.avatar }">
+    <div
+      class="image-message__content"
+      :class="{ 'is-first': isFirstInSeries, 'with-avatar-indent': !isFirstInSeries && message.avatar }"
+    >
       <BaseReplyMessage
         v-if="message.reply"
         style="margin: 10px 10px 4px 16px;"
@@ -41,11 +44,28 @@
 
       <div
         class="image-message__preview-button"
+        :class="{ 'image-message__preview-button--blur-edges': shouldApplyBlur }"
         @click="isOpenModal = true"
         @mouseenter="showMenu"
-        @mouseleave="buttonDownloadVisible = !buttonDownloadVisible"
+        @mouseleave="hideMenu"
       >
+        <div
+          v-if="shouldApplyBlur"
+          class="image-message__blur-wrapper"
+        >
+          <img
+            class="image-message__blur-left"
+            :src="message.url"
+            :alt="message.alt"
+          >
+          <img
+            class="image-message__blur-right"
+            :src="message.url"
+            :alt="message.alt"
+          >
+        </div>
         <img
+          ref="imageRef"
           class="image-message__preview-image"
           :style="{ borderRadius: imageBorderRadius }"
           :src="message.url"
@@ -118,6 +138,7 @@
 
       <div
         v-if="message.text"
+        ref="textRef"
         class="image-message__text-container"
       >
         <p
@@ -163,7 +184,7 @@
   setup
   lang="ts"
 >
-import { ref, computed, watch, inject } from 'vue';
+import { ref, computed, watch, inject, onMounted, onUnmounted, nextTick } from 'vue';
 import linkifyStr from "linkify-string";
 
 import { ContextMenu } from '../components'
@@ -216,6 +237,10 @@ const channelInfo = computed(() => {
 const buttonMenuVisible = ref(false);
 const buttonDownloadVisible = ref(false)
 const linkedText = ref('')
+const imageRef = ref<HTMLImageElement | null>(null)
+const textRef = ref<HTMLDivElement | null>(null)
+const textWidth = ref(0)
+const imageWidth = ref(0)
 
 watch(
   () => props.message.text,
@@ -225,6 +250,19 @@ watch(
     }
   },
   { immediate: true }
+)
+
+watch(
+  () => linkedText.value,
+  () => {
+    updateWidths()
+    // Переподключаем ResizeObserver после изменения текста
+    nextTick(() => {
+      if (resizeObserver && textRef.value) {
+        resizeObserver.observe(textRef.value)
+      }
+    })
+  }
 )
 
 const handleClickReplied = (messageId) => {
@@ -250,12 +288,88 @@ const showMenu = () => {
 
 const hideMenu = () => {
   buttonMenuVisible.value = false;
+  buttonDownloadVisible.value = false;
   isOpenMenu.value = false
 };
 
+const updateWidths = () => {
+  nextTick(() => {
+    if (imageRef.value) {
+      imageWidth.value = imageRef.value.offsetWidth
+    }
+    if (textRef.value) {
+      textWidth.value = textRef.value.offsetWidth
+    }
+  })
+}
+
+let resizeObserver: ResizeObserver | null = null
+let windowResizeHandler: (() => void) | null = null
+
+onMounted(() => {
+  updateWidths()
+  
+  // Обновляем размеры при изменении размера окна
+  windowResizeHandler = () => updateWidths()
+  window.addEventListener('resize', windowResizeHandler)
+  
+  // Используем ResizeObserver для отслеживания изменений размеров элементов
+  if (typeof ResizeObserver !== 'undefined') {
+    resizeObserver = new ResizeObserver(() => {
+      updateWidths()
+    })
+    
+    if (imageRef.value) {
+      resizeObserver.observe(imageRef.value)
+    }
+    if (textRef.value) {
+      resizeObserver.observe(textRef.value)
+    }
+  }
+})
+
+onUnmounted(() => {
+  if (windowResizeHandler) {
+    window.removeEventListener('resize', windowResizeHandler)
+  }
+  if (resizeObserver) {
+    resizeObserver.disconnect()
+  }
+})
+
+watch(
+  () => [props.message.text, props.message.url],
+  () => {
+    updateWidths()
+    // Переподключаем ResizeObserver после изменения элементов
+    nextTick(() => {
+      if (resizeObserver) {
+        resizeObserver.disconnect()
+        if (imageRef.value) {
+          resizeObserver.observe(imageRef.value)
+        }
+        if (textRef.value) {
+          resizeObserver.observe(textRef.value)
+        }
+      }
+    })
+  },
+  { immediate: true }
+)
+
+const shouldApplyBlur = computed(() => {
+  return props.message.text && textWidth.value > imageWidth.value && imageWidth.value > 0
+})
+
 const imageBorderRadius = computed(() => {
   if (props.message.reply && props.message.text) return '0'
-  if (props.message.text) return '8px 8px 0 0'
+  if (props.message.text) {
+    // Если текст шире изображения, возвращаем '0'
+    if (textWidth.value > imageWidth.value && imageWidth.value > 0) {
+      return '0'
+    }
+    return '8px 8px 0 0'
+  }
   if (props.message.reply) return '0 0 8px 8px'
   return '8px'
 })
@@ -281,6 +395,10 @@ const closeModal = () => isOpenModal.value = false
     max-width: min(60%, 430px);
     width: fit-content;
     border-radius: 14px;
+    align-items: stretch; // Растягиваем дочерние элементы по ширине
+    display: flex;
+    flex-direction: column;
+    min-width: 0; // Позволяет контейнеру сжиматься
   }
 
   &__avatar {
@@ -304,6 +422,7 @@ const closeModal = () => isOpenModal.value = false
     padding: 6px 10px;
     color: var(--chotto-message-popup-info-color);
     background-color: var(--chotto-message-popup-info-bg-color);
+    z-index: 2;
   }
 
   &__download-button {
@@ -318,6 +437,7 @@ const closeModal = () => isOpenModal.value = false
     padding: 6px 6px;
     background-color: var(--chotto-message-popup-info-bg-color);
     cursor: pointer;
+    z-index: 2;
 
     span {
       color: var(--chotto-message-popup-info-color);
@@ -388,6 +508,50 @@ const closeModal = () => isOpenModal.value = false
     height: fit-content;
     overflow: hidden;
 
+    &--blur-edges {
+      overflow: hidden;
+      width: 100%;
+      max-width: 100%;
+      justify-content: center;
+      align-items: center;
+      min-height: fit-content;
+      border-radius: 8px 8px 0 0;
+    }
+  }
+
+  &__blur-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+  }
+
+  &__blur-left,
+  &__blur-right {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(30px);
+    opacity: 0.85;
+    z-index: 0;
+    transform: scale(1.2);
+  }
+
+  &__blur-left {
+    object-position: left center;
+  }
+
+  &__blur-right {
+    object-position: right center;
   }
 
   &__preview-image {
@@ -398,6 +562,15 @@ const closeModal = () => isOpenModal.value = false
     object-fit: contain;
     cursor: zoom-in;
     display: block;
+    position: relative;
+    z-index: 1;
+
+    .image-message__preview-button--blur-edges & {
+      width: auto;
+      max-width: 430px;
+      margin: 0 auto;
+      flex-shrink: 0;
+    }
   }
 
   &__modal-image {
@@ -435,11 +608,19 @@ const closeModal = () => isOpenModal.value = false
   &__text-container {
     padding: 6px 10px 6px 10px;
     border-radius: 0 0 8px 8px;
+    width: 100%;
+    min-width: 0;
     word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 
     p {
       font-size: var(--chotto-text-font-size);
-      word-break: break-all;
+      word-break: normal;
+      overflow-wrap: break-word;
+      white-space: normal;
+      margin: 0;
+      line-height: 1.4;
     }
   }
 
