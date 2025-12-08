@@ -29,6 +29,7 @@
             :title-enabled="true"
             :dialog-tabs="dialogTabs"
             :title="'Mobilon One'"
+            :context-menu-trigger="'rightClick'"
             @select="selectChat"
             @expand="expandChat"
             @action="chatAction"
@@ -247,8 +248,8 @@
               >
                 <template #content>
                   <div>
-                    <!-- {{ selectedChat.name }}
-                    <!-- <button
+                    {{ selectedChat.name }}
+                     <button
                       class="button-close"
                       @click="isOpenChatPanel = !isOpenChatPanel"
                     >

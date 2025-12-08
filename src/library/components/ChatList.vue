@@ -63,6 +63,7 @@
             :chat="chat"
             :show-dialogs="props.showDialogs"
             :has-scroll="hasScroll"
+            :context-menu-trigger="props.contextMenuTrigger"
             @select="selectChat"
             @expand="expandChat"
             @action="action"
@@ -77,6 +78,7 @@
             :chat="chat"
             :show-dialogs="props.showDialogs"
             :has-scroll="hasScroll"
+            :context-menu-trigger="props.contextMenuTrigger"
             @select="selectChat"
             @expand="expandChat"
             @action="action"
@@ -91,6 +93,7 @@
             :chat="chat"
             :show-dialogs="props.showDialogs"
             :has-scroll="hasScroll"
+            :context-menu-trigger="props.contextMenuTrigger"
             @select="selectChat"
             @expand="expandChat"
             @action="action"
@@ -150,6 +153,11 @@ const props = defineProps({
   isLoading: {
     type: Boolean,
     default: false,
+  },
+  contextMenuTrigger: {
+    type: String,
+    default: 'hover',
+    validator: (value) => ['hover', 'rightClick'].includes(value),
   },
 });
 
