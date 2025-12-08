@@ -278,7 +278,8 @@ const closeModal = () => isOpenModal.value = false
 
   &__content {
     position: relative;
-    max-width: 60%;
+    max-width: min(60%, 430px);
+    width: fit-content;
     border-radius: 14px;
   }
 
@@ -381,13 +382,22 @@ const closeModal = () => isOpenModal.value = false
     display: flex;
     flex-direction: column;
     padding: 0;
+    max-width: 430px;
+    max-height: 430px;
+    width: fit-content;
+    height: fit-content;
+    overflow: hidden;
 
   }
 
   &__preview-image {
+    max-height: 430px;
+    max-width: 430px;
     width: 100%;
-    max-height: 500px;
+    height: auto;
+    object-fit: contain;
     cursor: zoom-in;
+    display: block;
   }
 
   &__modal-image {
@@ -395,7 +405,7 @@ const closeModal = () => isOpenModal.value = false
     height: 100%;
     object-fit: contain;
     border-radius: 5px;
-    max-height: 90vh;
+    max-height: 85vh;
     max-width: 95vw;
   }
 
