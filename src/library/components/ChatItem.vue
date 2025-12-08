@@ -281,6 +281,21 @@ const hideContextMenu = () => {
   contextMenuVisible.value = false
 }
 
+const closeAllOtherContextMenus = () => {
+  // Находим все контекстные меню на странице
+  const allMenus = document.querySelectorAll('[id^="context-menu-rightclick-"]')
+  allMenus.forEach((menu) => {
+    const menuElement = menu as HTMLElement
+    if (menuElement.id !== 'context-menu-rightclick-' + contextMenuId) {
+      // Закрываем все меню, кроме текущего
+      menuElement.style.top = '0'
+      menuElement.style.left = '0'
+      menuElement.style.opacity = '0'
+      menuElement.style.display = 'none'
+    }
+  })
+}
+
 
 const getSortedDialogs = () => {
   return props.chat.dialogs
@@ -350,17 +365,6 @@ const onMouseLeave = (event) => {
     else 
       buttonMenuVisible.value = false
   }
-  
-  // Закрываем контекстное меню при уходе мыши с элемента (если мышь не перешла на меню)
-  if (props.contextMenuTrigger === 'rightClick' && contextMenuVisible.value) {
-    const target = event.relatedTarget as HTMLElement
-    const contextMenu = document.getElementById('context-menu-rightclick-' + contextMenuId)
-    
-    // Закрываем меню, если мышь ушла с элемента и не перешла на меню
-    if (!contextMenu || !contextMenu.contains(target)) {
-      hideContextMenu()
-    }
-  }
 }
 
 const onRightClick = (event: MouseEvent) => {
@@ -370,6 +374,9 @@ const onRightClick = (event: MouseEvent) => {
 }
 
 const showContextMenu = (event: MouseEvent) => {
+  // Закрываем все другие открытые меню перед открытием нового
+  closeAllOtherContextMenus()
+  
   contextMenuVisible.value = true
   nextTick(() => {
     const contextMenu = document.getElementById('context-menu-rightclick-' + contextMenuId)
@@ -429,10 +436,7 @@ const onContextMenuMouseEnter = () => {
 }
 
 const onContextMenuMouseLeave = () => {
-  // Закрываем меню при уходе мыши с меню
-  if (props.contextMenuTrigger === 'rightClick') {
-    hideContextMenu()
-  }
+  // Меню остается открытым при уходе мыши
 }
 
 const containerRef = ref<HTMLElement | null>(null)
@@ -440,12 +444,10 @@ const containerRef = ref<HTMLElement | null>(null)
 const handleClickOutside = (event: MouseEvent) => {
   if (props.contextMenuTrigger === 'rightClick' && contextMenuVisible.value) {
     const target = event.target as HTMLElement
-    const container = containerRef.value
     const contextMenu = document.getElementById('context-menu-rightclick-' + contextMenuId)
     
-    // Закрываем меню, если клик был вне контейнера и вне самого меню
-    if (container && !container.contains(target) && 
-        (!contextMenu || !contextMenu.contains(target))) {
+    // Закрываем меню при любом клике, кроме клика на само меню (чтобы можно было выбрать пункт)
+    if (!contextMenu || !contextMenu.contains(target)) {
       hideContextMenu()
     }
   }
