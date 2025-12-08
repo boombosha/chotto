@@ -28,7 +28,7 @@
             filter-enabled
             :title-enabled="true"
             :dialog-tabs="dialogTabs"
-            :title="'Mobilon One'"
+            :title="'Mobilon One 0.2'"
             :context-menu-trigger="'rightClick'"
             @select="selectChat"
             @expand="expandChat"
@@ -94,6 +94,7 @@
                         :messages="messages"
                         :selected-chat="selectedChat"
                         :is-new-dialog="isNewDialog"
+                        :show-channel-icons="true"
                         @select-attribute-channel="handleAttributeChannelSelect"
                         @phone-call="handlePhoneCall"
                       />
