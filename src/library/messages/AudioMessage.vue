@@ -145,17 +145,13 @@
         </div>
 
         <span class="audio-message__time">{{ message.time }}</span>
-        <div
-          v-if="getClass(message) === 'audio-message__right' && statuses.includes(message.status)"
-          class="audio-message__status"
-          :class="status"
-        >
-          <span
-            v-if="message.status !== 'sent'"
-            class="pi pi-check"
-          />
-          <span class="pi pi-check" />
-        </div>
+        <MessageStatusIndicator
+          base-class="audio-message"
+          :message-class="getClass(message)"
+          :message-status="message.status"
+          :status-class="status"
+          :status-title="statusTitle"
+        />
       </div>
 
       <button
@@ -214,7 +210,8 @@ import { ref, onMounted, computed, watch, inject } from 'vue'
 import linkifyStr from "linkify-string";
 
 import { ContextMenu } from '../components'
-import { getStatus, statuses } from "../../helpers";
+import { getStatus, getStatusTitle } from "../../helpers";
+import MessageStatusIndicator from './MessageStatusIndicator.vue';
 import { IAudioMessage } from '../../types';
 import BaseReplyMessage from './BaseReplyMessage.vue'
 import LinkPreview from './LinkPreview.vue'
@@ -330,6 +327,7 @@ const viewsAction = () => {
 const clickAction = () => { }
 
 const status = computed(() => getStatus(props.message.status))
+const statusTitle = computed(() => getStatusTitle(props.message.status, (props.message as IAudioMessage & { statusMsg?: string }).statusMsg))
 
 function togglePlayPause() {
   if (player.value) {

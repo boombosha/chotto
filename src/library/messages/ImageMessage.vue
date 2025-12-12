@@ -88,17 +88,13 @@
 
             <span class="image-message__time">{{ message.time }}</span>
 
-            <div
-              v-if="getClass(message) === 'image-message__right' && statuses.includes(message.status)"
-              class="image-message__status"
-              :class="status"
-            >
-              <span
-                v-if="message.status !== 'sent'"
-                class="pi pi-check"
-              />
-              <span class="pi pi-check" />
-            </div>
+            <MessageStatusIndicator
+              base-class="image-message"
+              :message-class="getClass(message)"
+              :message-status="message.status"
+              :status-class="status"
+              :status-title="statusTitle"
+            />
           </div>
         </transition>
 
@@ -188,7 +184,8 @@ import { ref, computed, watch, inject, onMounted, onUnmounted, nextTick } from '
 import linkifyStr from "linkify-string";
 
 import { ContextMenu } from '../components'
-import { getStatus, statuses } from "../../helpers";
+import { getStatus, getStatusTitle } from "../../helpers";
+import MessageStatusIndicator from './MessageStatusIndicator.vue';
 import { IImageMessage } from '../../types';
 import BaseReplyMessage from './BaseReplyMessage.vue'
 import LinkPreview from './LinkPreview.vue'
@@ -375,6 +372,7 @@ const imageBorderRadius = computed(() => {
 })
 
 const status = computed(() => getStatus(props.message.status))
+const statusTitle = computed(() => getStatusTitle(props.message.status, (props.message as IImageMessage & { statusMsg?: string }).statusMsg))
 
 function getClass(message) {
   return message.position === 'left' ? 'image-message__left' : 'image-message__right';
@@ -468,12 +466,14 @@ const closeModal = () => isOpenModal.value = false
     display: flex;
 
     span {
+      color: var(--chotto-status-color-received);
       font-size: var(--chotto-small-text-icon-size);
     }
   }
 
   .status--received {
     span {
+      color: var(--chotto-status-color-received);
 
       &:first-child {
         margin-right: -8px;

@@ -16,6 +16,7 @@ import BaseReplyMessage from './BaseReplyMessage.vue'
 import LinkPreview from './LinkPreview.vue'
 import DateMessageSticky from './DateMessageSticky.vue'
 import DelimiterMessage from './DelimiterMessage.vue'
+import MessageStatusIndicator from './MessageStatusIndicator.vue'
 
 export {
   AudioMessage,
@@ -36,4 +37,5 @@ export {
   LinkPreview,
   DateMessageSticky,
   DelimiterMessage,
+  MessageStatusIndicator,
 }

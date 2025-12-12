@@ -91,17 +91,13 @@
 
         <span class="file-message__time">{{ message.time }}</span>
 
-        <div
-          v-if="getClass(message) === 'file-message__right' && statuses.includes(message.status)"
-          class="file-message__status"
-          :class="status"
-        >
-          <span
-            v-if="message.status !== 'sent'"
-            class="pi pi-check"
-          />
-          <span class="pi pi-check" />
-        </div>
+        <MessageStatusIndicator
+          base-class="file-message"
+          :message-class="getClass(message)"
+          :message-status="message.status"
+          :status-class="status"
+          :status-title="statusTitle"
+        />
       </div>
 
       <button
@@ -135,7 +131,8 @@ import linkifyStr from "linkify-string";
 import { ContextMenu } from '../components'
 import Tooltip from '../components/Tooltip.vue';
 
-import { getStatus, statuses } from "../../helpers";
+import { getStatus, getStatusTitle } from "../../helpers";
+import MessageStatusIndicator from './MessageStatusIndicator.vue';
 
 import { IFileMessage } from '../../types'
 import BaseReplyMessage from './BaseReplyMessage.vue'
@@ -213,6 +210,7 @@ const hideMenu = () => {
 };
 
 const status = computed(() => getStatus(props.message.status))
+const statusTitle = computed(() => getStatusTitle(props.message.status, (props.message as IFileMessage & { statusMsg?: string }).statusMsg))
 
 function getClass(message) {
   return message.position === 'left' ? 'file-message__left' : 'file-message__right';

@@ -73,17 +73,13 @@
           v-if="message.time"
           class="text-message__time"
         >{{ message.time }}</span>
-        <div
-          v-if="getClass(message) === 'text-message__right' && statuses.includes(message.status)"
-          class="text-message__status"
-          :class="status"
-        >
-          <span
-            v-if="message.status !== 'sent'"
-            class="pi pi-check"
-          />
-          <span class="pi pi-check" />
-        </div>
+        <MessageStatusIndicator
+          base-class="text-message"
+          :message-class="getClass(message)"
+          :message-status="message.status"
+          :status-class="status"
+          :status-title="statusTitle"
+        />
       </div>
 
       <button
@@ -114,12 +110,13 @@ import { computed, ref, watch } from 'vue'
 import linkifyStr from "linkify-string";
 
 import { ContextMenu } from '../components'
-import { getStatus, statuses } from "../../helpers";
+import { getStatus, getStatusTitle } from "../../helpers";
 import { ITextMessage } from '../../types';
 import BaseReplyMessage from './BaseReplyMessage.vue'
 import LinkPreview from './LinkPreview.vue'
 import EmbedPreview from './EmbedPreview.vue';
 import Tooltip from '../components/Tooltip.vue';
+import MessageStatusIndicator from './MessageStatusIndicator.vue';
 
 // Define props
 const props = defineProps({
@@ -184,6 +181,7 @@ const hideMenu = () => {
 };
 
 const status = computed(() => getStatus(props.message.status))
+const statusTitle = computed(() => getStatusTitle(props.message.status, (props.message as ITextMessage & { statusMsg?: string }).statusMsg))
 
 const clickAction = (action) => {
   hideMenu();

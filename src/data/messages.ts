@@ -558,7 +558,8 @@ export const messages = [
     subText: 'Максим',
     avatar:'https://placehold.jp/30/FFCF40/ffffff/64x64.png?text=Max',
     direction: 'outgoing',
-    status: 'received',
+    status: 'error',
+    statusMsg: 'Превышен лимит запросов на доставку',
     timestamp: '1757065503',
     backgroundColor: '#B3E5FC',
     header: 'Максим'
@@ -572,7 +573,7 @@ export const messages = [
     subText: 'Максим',
     avatar:'https://placehold.jp/30/FFCF40/ffffff/64x64.png?text=Max',
     direction: 'outgoing',
-    status: 'received',
+    status: 'read',
     timestamp: '1757065504',
     backgroundColor: '#B3E5FC',
     header: 'Максим'
