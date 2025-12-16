@@ -93,11 +93,19 @@
             class="chat-item__status-message"
             :class="status"
           >
-            <span
-              v-if="chat['lastMessage.status'] !== 'sent'"
-              class="pi pi-check"
-            />
-            <span class="pi pi-check" />
+            <template v-if="chat['lastMessage.status'] === 'pending'">
+              <span class="pi pi-clock" />
+            </template>
+            <template v-else-if="chat['lastMessage.status'] === 'error'">
+              <span class="pi pi-exclamation-circle" />
+            </template>
+            <template v-else>
+              <span
+                v-if="chat['lastMessage.status'] !== 'sent'"
+                class="pi pi-check"
+              />
+              <span class="pi pi-check" />
+            </template>
           </div>
 
           <div
@@ -776,6 +784,14 @@ onUnmounted(() => {
 .status--received span:first-child,
 .status--read span:first-child {
   margin-right: -8px;
+}
+
+.status--pending span {
+  color: var(--chotto-secondary-text-color);
+}
+
+.status--error span {
+  color: var(--chotto-error-color, #ff4444);
 }
 
 .text-enter-active,

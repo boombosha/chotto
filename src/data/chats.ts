@@ -264,7 +264,7 @@ export const chats = [
     'lastActivity.timestamp': '1757151901',
     isFixedBottom: false,
     status: "#00b972",
-    'lastMessage.status': 'read',
+    'lastMessage.status': 'pending',
     actions: [
       { action: 'addDialog', title: 'новый диалог' },
       { action: 'edit', title: 'изменить' },
